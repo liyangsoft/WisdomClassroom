@@ -11,11 +11,12 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.base.BaseFragment;
+import com.example.eventbus.EventCenter;
 import com.example.wisdomclassroom.R;
 
-public class SetFragment extends Fragment {
+public class SetFragment extends BaseFragment {
 
-    private View view;
     private RelativeLayout rlPlatform;
     private RelativeLayout rlIp;
     private RelativeLayout rlBlue;
@@ -25,25 +26,20 @@ public class SetFragment extends Fragment {
     private TextView tvBlue;
     private TextView tvWifi;
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_set, container, false);
-        return view;
-    }
+
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        rlPlatform = view.findViewById(R.id.rl_platform);
-        tvPlatform = view.findViewById(R.id.tv_platform);
-        rlIp = view.findViewById(R.id.rl_ip);
-        tvIp = view.findViewById(R.id.tv_ip);
-        rlBlue = view.findViewById(R.id.rl_blue);
-        tvBlue = view.findViewById(R.id.tv_blue);
+        rlPlatform = getView().findViewById(R.id.rl_platform);
+        tvPlatform = getView().findViewById(R.id.tv_platform);
+        rlIp = getView().findViewById(R.id.rl_ip);
+        tvIp = getView().findViewById(R.id.tv_ip);
+        rlBlue = getView().findViewById(R.id.rl_blue);
+        tvBlue = getView().findViewById(R.id.tv_blue);
 
-        rlWifi = view.findViewById(R.id.rl_wifi);
-        tvWifi = view.findViewById(R.id.tv_wifi);
+        rlWifi = getView().findViewById(R.id.rl_wifi);
+        tvWifi = getView().findViewById(R.id.tv_wifi);
         cutBg(0);
         rlPlatform.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +66,46 @@ public class SetFragment extends Fragment {
             }
         });
 
+    }
+
+    @Override
+    protected void onFirstUserVisible() {
+
+    }
+
+    @Override
+    protected void onUserVisible() {
+
+    }
+
+    @Override
+    protected void onUserInvisible() {
+
+    }
+
+    @Override
+    protected View getLoadingTargetView() {
+        return null;
+    }
+
+    @Override
+    protected void initViewsAndEvents() {
+
+    }
+
+    @Override
+    protected int getContentViewLayoutID() {
+        return R.layout.fragment_set;
+    }
+
+    @Override
+    protected void onEventComming(EventCenter eventCenter) {
+
+    }
+
+    @Override
+    protected boolean isBindEventBusHere() {
+        return false;
     }
 
     private void cutBg(int position) {

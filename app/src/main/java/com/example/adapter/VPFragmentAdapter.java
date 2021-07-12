@@ -5,12 +5,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 
+import com.example.base.BaseLazyFragment;
+
 import java.util.List;
 
 public class VPFragmentAdapter extends FragmentPagerAdapter {
-    private List<Fragment> mListFragments = null;
+    private List<BaseLazyFragment> mListFragments = null;
 
-    public VPFragmentAdapter(FragmentManager fm, List<Fragment> fragments) {
+    public VPFragmentAdapter(FragmentManager fm, List<BaseLazyFragment> fragments) {
         super(fm);
         mListFragments = fragments;
     }
@@ -31,7 +33,7 @@ public class VPFragmentAdapter extends FragmentPagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        return null;
+        return mListFragments.get(position).getName();//用来返回tab的名字
     }
 
 }

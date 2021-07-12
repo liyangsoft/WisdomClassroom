@@ -15,10 +15,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.adapter.VPFragmentAdapter;
+import com.example.base.BaseActivity;
+import com.example.base.BaseLazyFragment;
 import com.example.entity.MenuBean;
+import com.example.eventbus.EventCenter;
+import com.example.fragment.CompositeFragment;
 import com.example.fragment.ControlFragment;
 import com.example.fragment.CourseFragment;
 import com.example.fragment.LongFragment;
+import com.example.fragment.MainFragment;
 import com.example.fragment.ScreenFragment;
 import com.example.fragment.SetFragment;
 import com.example.widget.XViewPager;
@@ -27,140 +32,74 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import butterknife.BindView;
 
-public class MainActivity extends AppCompatActivity {
 
-    private XViewPager viewPager;
+public class MainActivity extends BaseActivity {
+
+
+    XViewPager viewPager;
+
     VPFragmentAdapter vpFragmentAdapter;
-    List<Fragment> fragments = new ArrayList<>();
-    private ImageView ivCourse;
-    private TextView tvCourse;
-    private RelativeLayout rlCourse;
-    private ImageView ivScreen;
-    private TextView tvScreen;
-    private RelativeLayout rlScreen;
-    private ImageView ivLong;
-    private TextView tvLong;
-    private RelativeLayout rlLong;
-    private ImageView ivControl;
-    private TextView tvControl;
-    private RelativeLayout rlControl;
-    private ImageView ivSet;
-    private TextView tvSet;
-    private RelativeLayout rlSet;
+    List<BaseLazyFragment> fragments = new ArrayList<>();
+
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        initId();
+    protected void getBundleExtras(Bundle extras) {
 
+    }
+
+    @Override
+    protected int getContentViewLayoutID() {
+        return R.layout.activity_main;
+    }
+
+    @Override
+    protected void onEventComming(EventCenter eventCenter) {
+
+    }
+
+    @Override
+    protected View getLoadingTargetView() {
+        return null;
+    }
+
+    @Override
+    protected void initViewsAndEvents() {
+        viewPager = find(R.id.viewPager);
         initFragment();
         initView();
-
-        init();
     }
 
-    private void initId() {
-        viewPager = findViewById(R.id.viewPager);
-        ivCourse = findViewById(R.id.iv_course);
-        tvCourse = findViewById(R.id.tv_course);
-        rlCourse = findViewById(R.id.rl_course);
-
-        ivScreen = findViewById(R.id.iv_screen);
-        tvScreen = findViewById(R.id.tv_screen);
-        rlScreen = findViewById(R.id.rl_screen);
-
-        ivLong = findViewById(R.id.iv_long);
-        tvLong = findViewById(R.id.tv_long);
-        rlLong = findViewById(R.id.rl_long);
-
-        ivControl = findViewById(R.id.iv_control);
-        tvControl = findViewById(R.id.tv_control);
-        rlControl = findViewById(R.id.rl_control);
-
-        ivSet = findViewById(R.id.iv_set);
-        tvSet = findViewById(R.id.tv_control);
-        rlSet = findViewById(R.id.rl_set);
-
-        cutIcon(0);
-        rlCourse.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cutIcon(0);
-            }
-        });
-        rlScreen.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cutIcon(1);
-            }
-        });
-        rlLong.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cutIcon(2);
-            }
-        });
-        rlControl.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cutIcon(3);
-            }
-        });
-        rlSet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cutIcon(4);
-            }
-        });
+    @Override
+    protected void onNetworkDisConnected() {
 
     }
 
-    private void cutIcon(int position) {
-        viewPager.setCurrentItem(position, false);
-        ivCourse.setImageResource(position == 0 ? R.drawable.course_select : R.drawable.course_normal);
-        tvCourse.setTextColor(position == 0 ? Color.parseColor("#00D5FF") : Color.parseColor("#2787C8"));
-        rlCourse.setBackground(position == 0 ? getResources().getDrawable(R.drawable.shape_tab_click) : null);
-
-        ivScreen.setImageResource(position == 1 ? R.drawable.screen_select : R.drawable.screen_normal);
-        tvScreen.setTextColor(position == 1 ? Color.parseColor("#00D5FF") : Color.parseColor("#2787C8"));
-        rlScreen.setBackground(position == 1 ? getResources().getDrawable(R.drawable.shape_tab_click) : null);
-
-        ivLong.setImageResource(position == 2 ? R.drawable.long_select : R.drawable.long_normal);
-        tvLong.setTextColor(position == 2 ? Color.parseColor("#00D5FF") : Color.parseColor("#2787C8"));
-        rlLong.setBackground(position == 2 ? getResources().getDrawable(R.drawable.shape_tab_click) : null);
-
-        ivControl.setImageResource(position == 3 ? R.drawable.control_select : R.drawable.control_normal);
-        tvControl.setTextColor(position == 3 ? Color.parseColor("#00D5FF") : Color.parseColor("#2787C8"));
-        rlControl.setBackground(position == 3 ? getResources().getDrawable(R.drawable.shape_tab_click) : null);
-
-        ivSet.setImageResource(position == 4 ? R.drawable.set_select : R.drawable.set_normal);
-        tvSet.setTextColor(position == 4 ? Color.parseColor("#00D5FF") : Color.parseColor("#2787C8"));
-        rlSet.setBackground(position == 4 ? getResources().getDrawable(R.drawable.shape_tab_click) : null);
-       /* switch (position) {
-            case 0:
-                ivCourse.setImageResource(R.drawable.course_select);
-                tvCourse.setTextColor(Color.parseColor("#00D5FF"));
-
-                ivScreen.setImageResource(R.drawable.screen_normal);
-                tvCourse.setTextColor(Color.parseColor("#2787C8 "));
-                break;
-        }*/
+    @Override
+    protected boolean isBindEventBusHere() {
+        return false;
     }
+
+    @Override
+    protected boolean toggleOverridePendingTransition() {
+        return false;
+    }
+
+    @Override
+    protected TransitionMode getOverridePendingTransitionMode() {
+        return null;
+    }
+
 
     private void initFragment() {
-        fragments.add(new CourseFragment());
-        fragments.add(new ScreenFragment());
-        fragments.add(new LongFragment());
-        fragments.add(new ControlFragment());
-        fragments.add(new SetFragment());
+        fragments.add(new CompositeFragment());
+        fragments.add(new MainFragment());
     }
 
     private void initView() {
 
         vpFragmentAdapter = new VPFragmentAdapter(getSupportFragmentManager(), fragments);
-        viewPager.setEnableScroll(false);
         viewPager.setOffscreenPageLimit(fragments.size());
         viewPager.setAdapter(vpFragmentAdapter);
 
