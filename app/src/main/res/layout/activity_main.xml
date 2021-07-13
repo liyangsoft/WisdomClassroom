@@ -10,7 +10,7 @@
     tools:context=".MainActivity">
 
     <com.example.widget.XViewPager
-        android:id="@+id/viewPager1"
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

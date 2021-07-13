@@ -16,21 +16,28 @@
 
 package com.example.base;
 
+import android.content.Context;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.TextPaint;
+import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.trello.rxlifecycle2.LifecycleTransformer;
 
 
-public abstract class BaseFragment extends BaseLazyFragment  {
+public abstract class BaseFragment extends BaseLazyFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
+    /*获取View*/
+    public <T extends View> T find(int viewId) {
+        return (T) getView().findViewById(viewId);
+    }
 
     @Override
     public void onResume() {
@@ -43,6 +50,8 @@ public abstract class BaseFragment extends BaseLazyFragment  {
     }
 
 
-
+    public void showToast(Context context, String msg) {
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+    }
 
 }
