@@ -44,7 +44,7 @@ public class MyPresentation extends Presentation {
         Resources r = getContext().getResources();
 
         // Inflate the layout.
-        setContentView(R.layout.fragment_teaching);
+        setContentView(R.layout.fragment_teaching_presentation);
             /*frameLayout = (FrameLayout) findViewById(R.id.frameLayout);
             bt_presentation = (Button) findViewById(R.id.bt_presentation);
             bt_presentation.setOnClickListener(new View.OnClickListener() {
