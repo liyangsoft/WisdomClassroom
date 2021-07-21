@@ -17,6 +17,7 @@
 package com.example.base;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.TextPaint;
@@ -54,4 +55,19 @@ public abstract class BaseFragment extends BaseLazyFragment {
         Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * 控件截图
+     *
+     * @param v
+     * @return
+     */
+    public static Bitmap cutBitmapFromView(View v) {
+        if (v == null) {
+            return null;
+        }
+        v.setDrawingCacheEnabled(true);
+        v.buildDrawingCache();
+        Bitmap bitmap = v.getDrawingCache();
+        return bitmap;
+    }
 }

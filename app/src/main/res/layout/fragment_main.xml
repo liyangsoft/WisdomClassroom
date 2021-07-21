@@ -386,11 +386,12 @@
             </LinearLayout>
 
             <Button
+                android:id="@+id/button"
                 android:layout_width="200dp"
                 android:layout_height="140dp"
                 android:layout_marginTop="30dp"
                 android:layout_weight="0"
-                android:background="#00D5FF"
+                android:background="#5090B9"
                 android:text="上课"
                 android:textColor="#000000"
                 android:textSize="50sp" />

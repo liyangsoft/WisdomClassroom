@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <com.example.widget.ChildClickableLinearLayout
         android:id="@+id/ll_left"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -222,7 +222,7 @@
                     <ImageView
                         android:layout_width="35dp"
                         android:layout_height="35dp"
-                        android:src="@drawable/teacher_icon" />
+                        android:src="@drawable/teachering_icon" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -250,7 +250,7 @@
                     <ImageView
                         android:layout_width="35dp"
                         android:layout_height="35dp"
-                        android:src="@drawable/wifi_icon" />
+                        android:src="@drawable/wifiing_icon" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -333,8 +333,9 @@
             android:text="上课"
             android:textColor="#000000"
             android:textSize="24sp" />
-    </LinearLayout>
+    </com.example.widget.ChildClickableLinearLayout>
 
+    <!--底部工具栏-->
     <RelativeLayout
         android:id="@+id/rl_bottom"
         android:layout_width="match_parent"
@@ -418,8 +419,9 @@
             </LinearLayout>
 
             <RelativeLayout
+                android:id="@+id/rl_pen"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center">
 
@@ -433,8 +435,9 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rl_eraser"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center">
 
@@ -447,72 +450,79 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rl_back"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center">
 
                 <ImageView
+                    android:id="@+id/iv_back"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
-
                     android:src="@drawable/white_back_icon" />
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rl_go"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center">
 
                 <ImageView
+                    android:id="@+id/iv_go"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
-
                     android:src="@drawable/white_go_icon" />
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rl_add"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center">
 
                 <ImageView
+                    android:id="@+id/iv_add"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
-
                     android:src="@drawable/white_add_icon" />
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rl_last"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center">
 
                 <ImageView
+                    android:id="@+id/iv_last"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
-
                     android:src="@drawable/white_last_icon" />
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rl_next"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center">
 
                 <ImageView
+                    android:id="@+id/iv_next"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:src="@drawable/white_next_icon" />
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rl_orthogon"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center">
 
@@ -524,10 +534,12 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rl_exit"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center">
+                android:gravity="center"
+                android:visibility="invisible">
 
                 <ImageView
                     android:layout_width="36dp"
@@ -599,5 +611,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/rl_bottom"
-        android:layout_toRightOf="@+id/rl_recyclerView" />
+        android:layout_toRightOf="@+id/rl_recyclerView"
+        android:background="#ffffff"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/iv_recover"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="40dp"
+        android:layout_marginBottom="40dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/blue_show_icon"
+        android:visibility="gone" />
 </RelativeLayout>

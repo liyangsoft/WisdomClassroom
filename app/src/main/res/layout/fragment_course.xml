@@ -33,7 +33,9 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
+            <com.example.widget.PressImageView
+                app:pressImage="@drawable/movie_select_icon"
+                app:upImage="@drawable/movie_icon"
                 android:layout_width="81dp"
                 android:layout_height="81dp"
                 android:src="@drawable/movie_icon" />
@@ -54,7 +56,9 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
+            <com.example.widget.PressImageView
+                app:pressImage="@drawable/movie_assets_select_icon"
+                app:upImage="@drawable/movie_assets_icon"
                 android:layout_width="81dp"
                 android:layout_height="81dp"
                 android:src="@drawable/movie_assets_icon" />
@@ -89,7 +93,9 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
+            <com.example.widget.PressImageView
+                app:pressImage="@drawable/start_select_icon"
+                app:upImage="@drawable/start_icon"
                 android:layout_width="81dp"
                 android:layout_height="81dp"
                 android:src="@drawable/start_icon" />
@@ -111,7 +117,9 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
+            <com.example.widget.PressImageView
+                app:pressImage="@drawable/pause_select_icon"
+                app:upImage="@drawable/pause_icon"
                 android:layout_width="81dp"
                 android:layout_height="81dp"
                 android:src="@drawable/pause_icon" />
@@ -132,7 +140,9 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
+            <com.example.widget.PressImageView
+                app:pressImage="@drawable/stop_select_icon"
+                app:upImage="@drawable/stop_icon"
                 android:layout_width="81dp"
                 android:layout_height="81dp"
                 android:src="@drawable/stop_icon" />
@@ -153,7 +163,9 @@
             android:gravity="center"
             android:orientation="vertical">
 
-            <ImageView
+            <com.example.widget.PressImageView
+                app:pressImage="@drawable/overtime_select_icon"
+                app:upImage="@drawable/overtime_icon"
                 android:layout_width="81dp"
                 android:layout_height="81dp"
                 android:src="@drawable/overtime_icon" />

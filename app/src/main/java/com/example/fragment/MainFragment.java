@@ -2,7 +2,9 @@ package com.example.fragment;
 
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -37,6 +39,7 @@ public class MainFragment extends BaseFragment {
     private ImageView ivSet;
     private TextView tvSet;
     private RelativeLayout rlSet;
+    private Button button;
 
     @Override
     protected void onFirstUserVisible() {
@@ -84,6 +87,8 @@ public class MainFragment extends BaseFragment {
     }
 
     private void initId() {
+
+        button = getView().findViewById(R.id.button);
 
         viewPager = getView().findViewById(R.id.viewPager);
         ivCourse = getView().findViewById(R.id.iv_course);
@@ -135,6 +140,23 @@ public class MainFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 cutIcon(4);
+            }
+        });
+
+        button.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        button.setBackgroundColor(Color.parseColor("#00D5FF"));
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        button.setBackgroundColor(Color.parseColor("#5090B9"));
+                        break;
+                    default:
+                        break;
+                }
+                return true;
             }
         });
 

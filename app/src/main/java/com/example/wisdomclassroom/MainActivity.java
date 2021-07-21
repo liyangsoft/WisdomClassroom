@@ -20,6 +20,7 @@ import android.widget.FrameLayout;
 import com.example.adapter.VPFragmentAdapter;
 import com.example.base.BaseActivity;
 import com.example.base.BaseLazyFragment;
+import com.example.base.Constants;
 import com.example.eventbus.EventCenter;
 import com.example.fragment.TeachingFragment;
 import com.example.fragment.MainFragment;
@@ -52,7 +53,10 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void onEventComming(EventCenter eventCenter) {
-
+        if (eventCenter.getEventCode() == Constants.EVENT_VIEWPAGER) {
+            boolean flag = (boolean) eventCenter.getData();
+            viewPager.setEnableScroll(flag);
+        }
     }
 
     @Override
@@ -76,7 +80,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected boolean isBindEventBusHere() {
-        return false;
+        return true;
     }
 
     @Override

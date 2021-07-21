@@ -1,12 +1,15 @@
 package com.example.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.base.BaseFragment;
 import com.example.eventbus.EventCenter;
@@ -37,7 +40,23 @@ public class LongFragment extends BaseFragment {
 
     @Override
     protected void initViewsAndEvents() {
-
+        TextView textView = getView().findViewById(R.id.text);
+        textView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        textView.setBackgroundColor(Color.parseColor("#00D5FF"));
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        textView.setBackgroundColor(Color.parseColor("#5090B9"));
+                        break;
+                    default:
+                        break;
+                }
+                return true;
+            }
+        });
     }
 
     @Override
