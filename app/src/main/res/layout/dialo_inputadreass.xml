@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="com.example.fragment.TesFragment.InputModel" />
+
+        <import type="com.example.fragment.TesFragment.InputDialog" />
+
+        <variable
+            name="model"
+            type="InputModel" />
+
+        <variable
+            name="callback"
+            type="InputDialog" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="链接地址"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/editText_ip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="@={model.ipaddr}" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right">
+
+           <!-- <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{(view)->callback.onClick()}"
+                android:text="@string/but_ok" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{(view)->callback.onCancle()}"
+                android:text="@string/but_cancle" />-->
+        </LinearLayout>
+    </LinearLayout>
+</layout>

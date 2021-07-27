@@ -24,6 +24,7 @@ import com.example.base.Constants;
 import com.example.eventbus.EventCenter;
 import com.example.fragment.TeachingFragment;
 import com.example.fragment.MainFragment;
+import com.example.fragment.TestFragment;
 import com.example.presentation.MyPresentation;
 import com.example.widget.XViewPager;
 
@@ -97,7 +98,7 @@ public class MainActivity extends BaseActivity {
     private void initFragment() {
 
         fragments.add(new MainFragment());
-        fragments.add(new TeachingFragment());
+        fragments.add(new TestFragment());
     }
 
     private void initView() {
