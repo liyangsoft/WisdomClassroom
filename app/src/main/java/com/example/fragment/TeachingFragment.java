@@ -210,8 +210,11 @@ public class TeachingFragment extends BaseFragment {
         rlWifi.setOnClickListener(v -> {
             cutIcon(7);
         });
+
+        //远程
         rlLong.setOnClickListener(v -> {
             cutIcon(8);
+            PopwindowUtils.showLongPop(mContext,rlLong,rlBottomUtil);
         });
         rlMore.setOnClickListener(v -> {
             cutIcon(9);
@@ -244,7 +247,7 @@ public class TeachingFragment extends BaseFragment {
             PopwindowUtils.showPop(mContext, rlPen, new PopwindowUtils.ColorPenListener() {
                 @Override
                 public void penSet(int size) {
-                    if (null!=mDoodle){
+                    if (null != mDoodle) {
                         mDoodle.setSize(size);
                     }
 
@@ -252,7 +255,7 @@ public class TeachingFragment extends BaseFragment {
 
                 @Override
                 public void colorSet(String color) {
-                    if (null!=mDoodle){
+                    if (null != mDoodle) {
                         mDoodle.setColor(new DoodleColor(Color.parseColor(color)));
                     }
 

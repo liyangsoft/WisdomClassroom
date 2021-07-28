@@ -161,13 +161,13 @@
                     android:layout_marginTop="20dp"
                     android:background="#021D42"
                     android:orientation="vertical"
-                    android:padding="30dp">
+                    android:padding="10dp">
 
                     <EditText
                         android:layout_width="match_parent"
-                        android:layout_height="60dp"
+                        android:layout_height="40dp"
                         android:layout_marginLeft="10dp"
-                        android:layout_marginTop="30dp"
+                        android:layout_marginTop="20dp"
                         android:background="@drawable/shape_edittext"
                         android:hint="输入会议号或者会议室号"
                         android:paddingLeft="10dp"
@@ -177,7 +177,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="40dp"
+                        android:layout_marginTop="20dp"
                         android:gravity="center"
                         android:orientation="horizontal">
 
@@ -192,8 +192,8 @@
                                 android:layout_centerInParent="true"
                                 android:background="@drawable/shape_round"
                                 android:gravity="center"
-                                android:minWidth="79dp"
-                                android:minHeight="79dp"
+                                android:minWidth="70dp"
+                                android:minHeight="70dp"
                                 android:text="1"
                                 android:textColor="#FF00D5FF"
                                 android:textSize="40sp" />
@@ -211,8 +211,8 @@
                                 android:layout_centerVertical="true"
                                 android:background="@drawable/shape_round"
                                 android:gravity="center"
-                                android:minWidth="79dp"
-                                android:minHeight="79dp"
+                                android:minWidth="70dp"
+                                android:minHeight="70dp"
                                 android:text="2"
                                 android:textColor="#FF00D5FF"
                                 android:textSize="40sp" />
@@ -230,8 +230,8 @@
                                 android:layout_centerVertical="true"
                                 android:background="@drawable/shape_round"
                                 android:gravity="center"
-                                android:minWidth="79dp"
-                                android:minHeight="79dp"
+                                android:minWidth="70dp"
+                                android:minHeight="70dp"
                                 android:text="3"
                                 android:textColor="#FF00D5FF"
                                 android:textSize="40sp" />
@@ -247,8 +247,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
                                 android:background="@drawable/shape_round"
-                                android:minWidth="79dp"
-                                android:minHeight="79dp">
+                                android:minWidth="70dp"
+                                android:minHeight="70dp">
 
                                 <ImageView
                                     android:layout_width="wrap_content"
@@ -262,7 +262,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="40dp"
+                        android:layout_marginTop="20dp"
                         android:gravity="center"
                         android:orientation="horizontal">
 
@@ -278,8 +278,8 @@
                                 android:layout_centerVertical="true"
                                 android:background="@drawable/shape_round"
                                 android:gravity="center"
-                                android:minWidth="79dp"
-                                android:minHeight="79dp"
+                                android:minWidth="70dp"
+                                android:minHeight="70dp"
                                 android:text="4"
                                 android:textColor="#FF00D5FF"
                                 android:textSize="40sp" />
@@ -293,11 +293,11 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
+                                android:layout_centerInParent="true"
                                 android:background="@drawable/shape_round"
                                 android:gravity="center"
-                                android:minWidth="79dp"
-                                android:minHeight="79dp"
+                                android:minWidth="70dp"
+                                android:minHeight="70dp"
                                 android:text="5"
                                 android:textColor="#FF00D5FF"
                                 android:textSize="40sp" />
@@ -315,8 +315,8 @@
                                 android:layout_centerVertical="true"
                                 android:background="@drawable/shape_round"
                                 android:gravity="center"
-                                android:minWidth="79dp"
-                                android:minHeight="79dp"
+                                android:minWidth="70dp"
+                                android:minHeight="70dp"
                                 android:text="6"
                                 android:textColor="#FF00D5FF"
                                 android:textSize="40sp" />
@@ -334,8 +334,8 @@
                                 android:layout_centerInParent="true"
                                 android:background="@drawable/shape_round"
                                 android:gravity="center"
-                                android:minWidth="79dp"
-                                android:minHeight="79dp"
+                                android:minWidth="70dp"
+                                android:minHeight="70dp"
                                 android:text="·"
                                 android:textColor="#FF00D5FF"
                                 android:textSize="40sp" />
@@ -345,7 +345,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="40dp"
+                        android:layout_marginTop="20dp"
                         android:gravity="center"
                         android:orientation="horizontal">
 
@@ -360,8 +360,8 @@
                                 android:layout_centerInParent="true"
                                 android:background="@drawable/shape_round"
                                 android:gravity="center"
-                                android:minWidth="79dp"
-                                android:minHeight="79dp"
+                                android:minWidth="70dp"
+                                android:minHeight="70dp"
                                 android:text="7"
                                 android:textColor="#FF00D5FF"
                                 android:textSize="40sp" />
@@ -379,8 +379,8 @@
 
                                 android:background="@drawable/shape_round"
                                 android:gravity="center"
-                                android:minWidth="79dp"
-                                android:minHeight="79dp"
+                                android:minWidth="70dp"
+                                android:minHeight="70dp"
                                 android:text="8"
                                 android:textColor="#FF00D5FF"
                                 android:textSize="40sp" />
@@ -398,8 +398,8 @@
                                 android:layout_centerInParent="true"
                                 android:background="@drawable/shape_round"
                                 android:gravity="center"
-                                android:minWidth="79dp"
-                                android:minHeight="79dp"
+                                android:minWidth="70dp"
+                                android:minHeight="70dp"
                                 android:text="9"
                                 android:textColor="#FF00D5FF"
                                 android:textSize="40sp" />
@@ -416,8 +416,8 @@
                                 android:layout_centerInParent="true"
                                 android:background="@drawable/shape_round"
                                 android:gravity="center"
-                                android:minWidth="79dp"
-                                android:minHeight="79dp"
+                                android:minWidth="70dp"
+                                android:minHeight="70dp"
                                 android:text="中/英"
                                 android:textColor="#FF00D5FF"
                                 android:textSize="30sp" />
@@ -427,7 +427,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="40dp"
+                        android:layout_marginTop="20dp"
                         android:gravity="center"
                         android:orientation="horizontal">
 
@@ -442,8 +442,8 @@
                                 android:layout_centerInParent="true"
                                 android:background="@drawable/shape_round"
                                 android:gravity="center"
-                                android:minWidth="79dp"
-                                android:minHeight="79dp"
+                                android:minWidth="70dp"
+                                android:minHeight="70dp"
                                 android:text="*"
                                 android:textColor="#FF00D5FF"
                                 android:textSize="40sp" />
@@ -461,8 +461,8 @@
 
                                 android:background="@drawable/shape_round"
                                 android:gravity="center"
-                                android:minWidth="79dp"
-                                android:minHeight="79dp"
+                                android:minWidth="70dp"
+                                android:minHeight="70dp"
                                 android:text="0"
                                 android:textColor="#FF00D5FF"
                                 android:textSize="40sp" />
@@ -480,8 +480,8 @@
                                 android:layout_centerInParent="true"
                                 android:background="@drawable/shape_ovil"
                                 android:gravity="center"
-                                android:minWidth="180dp"
-                                android:minHeight="79dp"
+                                android:minWidth="150dp"
+                                android:minHeight="60dp"
                                 android:text="确认"
                                 android:textColor="#FF00D5FF"
                                 android:textSize="40sp" />

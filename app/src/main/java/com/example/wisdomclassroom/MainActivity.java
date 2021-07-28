@@ -98,7 +98,7 @@ public class MainActivity extends BaseActivity {
     private void initFragment() {
 
         fragments.add(new MainFragment());
-        fragments.add(new TestFragment());
+        fragments.add(new TeachingFragment());
     }
 
     private void initView() {
