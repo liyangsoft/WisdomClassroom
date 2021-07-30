@@ -1,501 +1,512 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.widget.RecyclerViewScrollview xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#484A6D">
+    android:orientation="vertical">
 
-    <LinearLayout
+    <com.example.widget.RecyclerViewScrollview
+        android:id="@+id/id"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:descendantFocusability="blocksDescendants"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:background="#484A6D"
+        android:layout_height="wrap_content">
+
 
         <LinearLayout
-            android:visibility="gone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
 
-            <View
-                android:layout_width="8dp"
-                android:layout_height="20dp"
-                android:background="@drawable/shape_table" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="历史记录"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_marginBottom="20dp"
-            android:visibility="gone"
-            android:id="@+id/bg_theme"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/history_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp" />
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <View
-                android:layout_width="8dp"
-                android:layout_height="20dp"
-                android:background="@drawable/shape_table" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="已预约的会议"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/make_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp" />
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <View
-                android:layout_width="8dp"
-                android:layout_height="20dp"
-                android:background="@drawable/shape_table" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="拨号盘"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#021D42"
+            android:descendantFocusability="blocksDescendants"
             android:orientation="vertical"
             android:padding="20dp">
 
-            <EditText
-                android:id="@+id/editText"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/shape_edittext"
-                android:hint="输入会议号或者会议室号"
-                android:paddingLeft="10dp"
-                android:textColor="#ffffff"
-                android:textColorHint="#ffffff"
-                android:textSize="18sp" />
-
             <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <View
+                    android:layout_width="8dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/shape_table" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="历史记录"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/bg_theme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_marginBottom="20dp"
+              android:visibility="gone">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/history_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <RelativeLayout
-                    android:id="@+id/rl_1"
+                <View
+                    android:layout_width="8dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/shape_table" />
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_marginLeft="10dp"
+                    android:text="已预约的会议"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp" />
+            </LinearLayout>
 
-                    <com.example.widget.PressTextView
-                        app:pressImage="@drawable/shape_round_select"
-                        app:upImage="@drawable/shape_round"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:background="@drawable/shape_round"
-                        android:gravity="center"
-                        android:minWidth="79dp"
-                        android:minHeight="79dp"
-                        android:text="1"
-                        android:textColor="#fff"
-                        android:textSize="30sp" />
-                </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-                <RelativeLayout
-                    android:id="@+id/rl_2"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/make_recycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="8dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/shape_table" />
+
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_marginLeft="10dp"
+                    android:text="拨号盘"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp" />
+            </LinearLayout>
 
-                    <com.example.widget.PressTextView
-                        app:pressImage="@drawable/shape_round_select"
-                        app:upImage="@drawable/shape_round"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:layout_centerVertical="true"
-                        android:background="@drawable/shape_round"
-                        android:gravity="center"
-                        android:minWidth="79dp"
-                        android:minHeight="79dp"
-                        android:text="2"
-                        android:textColor="#fff"
-                        android:textSize="30sp" />
-                </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#021D42"
+                android:orientation="vertical"
+                android:padding="20dp">
 
-                <RelativeLayout
-                    android:id="@+id/rl_3"
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/editText"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/shape_edittext"
+                    android:hint="输入会议号或者会议室号"
+                    android:paddingLeft="10dp"
+                    android:textColor="#ffffff"
+                    android:textColorHint="#ffffff"
+                    android:textSize="18sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1">
+                    android:layout_marginTop="30dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-                    <com.example.widget.PressTextView
-                        app:pressImage="@drawable/shape_round_select"
-                        app:upImage="@drawable/shape_round"
+                    <RelativeLayout
+                        android:id="@+id/rl_1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:layout_centerVertical="true"
-                        android:background="@drawable/shape_round"
-                        android:gravity="center"
-                        android:minWidth="79dp"
-                        android:minHeight="79dp"
-                        android:text="3"
-                        android:textColor="#fff"
-                        android:textSize="30sp" />
-                </RelativeLayout>
+                        android:layout_weight="1">
 
-                <RelativeLayout
-                    android:id="@+id/rl_delete"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <com.example.widget.PressRelativeLayout
-                        app:pressImage="@drawable/shape_round_select"
-                        app:upImage="@drawable/shape_round"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:background="@drawable/shape_round"
-                        android:minWidth="79dp"
-                        android:minHeight="79dp">
-
-                        <ImageView
+                        <com.example.widget.PressTextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_centerInParent="true"
-                            android:src="@drawable/delete_icon" />
-                    </com.example.widget.PressRelativeLayout>
-                </RelativeLayout>
+                            android:background="@drawable/shape_round"
+                            android:gravity="center"
+                            android:minWidth="79dp"
+                            android:minHeight="79dp"
+                            android:text="1"
+                            android:textColor="#fff"
+                            android:textSize="30sp"
+                            app:pressImage="@drawable/shape_round_select"
+                            app:upImage="@drawable/shape_round" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <com.example.widget.PressTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/shape_round"
+                            android:gravity="center"
+                            android:minWidth="79dp"
+                            android:minHeight="79dp"
+                            android:text="2"
+                            android:textColor="#fff"
+                            android:textSize="30sp"
+                            app:pressImage="@drawable/shape_round_select"
+                            app:upImage="@drawable/shape_round" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <com.example.widget.PressTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/shape_round"
+                            android:gravity="center"
+                            android:minWidth="79dp"
+                            android:minHeight="79dp"
+                            android:text="3"
+                            android:textColor="#fff"
+                            android:textSize="30sp"
+                            app:pressImage="@drawable/shape_round_select"
+                            app:upImage="@drawable/shape_round" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_delete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <com.example.widget.PressRelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/shape_round"
+                            android:minWidth="79dp"
+                            android:minHeight="79dp"
+                            app:pressImage="@drawable/shape_round_select"
+                            app:upImage="@drawable/shape_round">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true"
+                                android:src="@drawable/delete_icon" />
+                        </com.example.widget.PressRelativeLayout>
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:id="@+id/rl_4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <com.example.widget.PressTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/shape_round"
+                            android:gravity="center"
+                            android:minWidth="79dp"
+                            android:minHeight="79dp"
+                            android:text="4"
+                            android:textColor="#fff"
+                            android:textSize="30sp"
+                            app:pressImage="@drawable/shape_round_select"
+                            app:upImage="@drawable/shape_round" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <com.example.widget.PressTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/shape_round"
+                            android:gravity="center"
+                            android:minWidth="79dp"
+                            android:minHeight="79dp"
+                            android:text="5"
+                            android:textColor="#fff"
+                            android:textSize="30sp"
+                            app:pressImage="@drawable/shape_round_select"
+                            app:upImage="@drawable/shape_round" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <com.example.widget.PressTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/shape_round"
+                            android:gravity="center"
+                            android:minWidth="79dp"
+                            android:minHeight="79dp"
+                            android:text="6"
+                            android:textColor="#fff"
+                            android:textSize="30sp"
+                            app:pressImage="@drawable/shape_round_select"
+                            app:upImage="@drawable/shape_round" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_dot"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <com.example.widget.PressTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/shape_round"
+                            android:gravity="center"
+                            android:minWidth="79dp"
+                            android:minHeight="79dp"
+                            android:text="·"
+                            android:textColor="#fff"
+                            android:textSize="30sp"
+                            app:pressImage="@drawable/shape_round_select"
+                            app:upImage="@drawable/shape_round" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:id="@+id/rl_7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <com.example.widget.PressTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/shape_round"
+                            android:gravity="center"
+                            android:minWidth="79dp"
+                            android:minHeight="79dp"
+                            android:text="7"
+                            android:textColor="#fff"
+                            android:textSize="30sp"
+                            app:pressImage="@drawable/shape_round_select"
+                            app:upImage="@drawable/shape_round" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <com.example.widget.PressTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/shape_round"
+                            android:gravity="center"
+
+                            android:minWidth="79dp"
+                            android:minHeight="79dp"
+                            android:text="8"
+                            android:textColor="#fff"
+                            android:textSize="30sp"
+                            app:pressImage="@drawable/shape_round_select"
+                            app:upImage="@drawable/shape_round" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_9"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <com.example.widget.PressTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/shape_round"
+                            android:gravity="center"
+                            android:minWidth="79dp"
+                            android:minHeight="79dp"
+                            android:text="9"
+                            android:textColor="#fff"
+                            android:textSize="30sp"
+                            app:pressImage="@drawable/shape_round_select"
+                            app:upImage="@drawable/shape_round" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <com.example.widget.PressTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/shape_round"
+                            android:gravity="center"
+                            android:minWidth="79dp"
+                            android:minHeight="79dp"
+                            android:text="0"
+                            android:textColor="#fff"
+                            android:textSize="30sp"
+                            app:pressImage="@drawable/shape_round_select"
+                            app:upImage="@drawable/shape_round" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <RelativeLayout
+                        android:id="@+id/rl_star"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <com.example.widget.PressTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/shape_round"
+                            android:gravity="center"
+                            android:minWidth="79dp"
+                            android:minHeight="79dp"
+                            android:text="*"
+                            android:textColor="#fff"
+                            android:textSize="40sp"
+                            app:pressImage="@drawable/shape_round_select"
+                            app:upImage="@drawable/shape_round" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:visibility="invisible">
+
+                        <com.example.widget.PressTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/shape_round"
+                            android:gravity="center"
+                            android:minWidth="79dp"
+                            android:minHeight="79dp"
+                            android:textColor="#fff"
+                            android:textSize="40sp"
+                            app:pressImage="@drawable/shape_round_select"
+                            app:upImage="@drawable/shape_round"
+                            tools:text="0" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_add"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2">
+
+                        <com.example.widget.PressTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:layout_centerInParent="true"
+                            android:background="@drawable/shape_ovil"
+                            android:gravity="center"
+                            android:minWidth="180dp"
+                            android:minHeight="79dp"
+                            android:text="加入"
+                            android:textColor="#fff"
+                            android:textSize="40sp"
+                            app:pressImage="@drawable/shape_ovil_select"
+                            app:upImage="@drawable/shape_ovil" />
+                    </RelativeLayout>
+
+
+                </LinearLayout>
+
             </LinearLayout>
 
-            <LinearLayout
-
-                android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="500dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="20dp"
+                android:background="#00D5FF"
                 android:gravity="center"
-                android:orientation="horizontal">
-
-                <RelativeLayout
-                    android:id="@+id/rl_4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <com.example.widget.PressTextView
-                        app:pressImage="@drawable/shape_round_select"
-                        app:upImage="@drawable/shape_round"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:layout_centerVertical="true"
-                        android:background="@drawable/shape_round"
-                        android:gravity="center"
-                        android:minWidth="79dp"
-                        android:minHeight="79dp"
-                        android:text="4"
-                        android:textColor="#fff"
-                        android:textSize="30sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rl_5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <com.example.widget.PressTextView
-                        app:pressImage="@drawable/shape_round_select"
-                        app:upImage="@drawable/shape_round"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:background="@drawable/shape_round"
-                        android:gravity="center"
-                        android:minWidth="79dp"
-                        android:minHeight="79dp"
-                        android:text="5"
-                        android:textColor="#fff"
-                        android:textSize="30sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rl_6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <com.example.widget.PressTextView
-                        app:pressImage="@drawable/shape_round_select"
-                        app:upImage="@drawable/shape_round"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:layout_centerVertical="true"
-                        android:background="@drawable/shape_round"
-                        android:gravity="center"
-                        android:minWidth="79dp"
-                        android:minHeight="79dp"
-                        android:text="6"
-                        android:textColor="#fff"
-                        android:textSize="30sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rl_dot"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <com.example.widget.PressTextView
-                        app:pressImage="@drawable/shape_round_select"
-                        app:upImage="@drawable/shape_round"
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:background="@drawable/shape_round"
-                        android:gravity="center"
-                        android:minWidth="79dp"
-                        android:minHeight="79dp"
-                        android:text="·"
-                        android:textColor="#fff"
-                        android:textSize="30sp" />
-                </RelativeLayout>
-            </LinearLayout>
-
-            <LinearLayout
-
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <RelativeLayout
-                    android:id="@+id/rl_7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <com.example.widget.PressTextView
-                        app:pressImage="@drawable/shape_round_select"
-                        app:upImage="@drawable/shape_round"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:background="@drawable/shape_round"
-                        android:gravity="center"
-                        android:minWidth="79dp"
-                        android:minHeight="79dp"
-                        android:text="7"
-                        android:textColor="#fff"
-                        android:textSize="30sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rl_8"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <com.example.widget.PressTextView
-                        app:pressImage="@drawable/shape_round_select"
-                        app:upImage="@drawable/shape_round"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-
-                        android:background="@drawable/shape_round"
-                        android:gravity="center"
-                        android:minWidth="79dp"
-                        android:minHeight="79dp"
-                        android:text="8"
-                        android:textColor="#fff"
-                        android:textSize="30sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rl_9"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <com.example.widget.PressTextView
-                        app:pressImage="@drawable/shape_round_select"
-                        app:upImage="@drawable/shape_round"
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:background="@drawable/shape_round"
-                        android:gravity="center"
-                        android:minWidth="79dp"
-                        android:minHeight="79dp"
-                        android:text="9"
-                        android:textColor="#fff"
-                        android:textSize="30sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rl_0"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <com.example.widget.PressTextView
-                        app:pressImage="@drawable/shape_round_select"
-                        app:upImage="@drawable/shape_round"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:background="@drawable/shape_round"
-                        android:gravity="center"
-                        android:minWidth="79dp"
-                        android:minHeight="79dp"
-                        android:text="0"
-                        android:textColor="#fff"
-                        android:textSize="30sp" />
-                </RelativeLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <RelativeLayout
-                    android:id="@+id/rl_star"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <com.example.widget.PressTextView
-                        app:pressImage="@drawable/shape_round_select"
-                        app:upImage="@drawable/shape_round"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:background="@drawable/shape_round"
-                        android:gravity="center"
-                        android:minWidth="79dp"
-                        android:minHeight="79dp"
-                        android:text="*"
-                        android:textColor="#fff"
-                        android:textSize="40sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:visibility="invisible">
-
-                    <com.example.widget.PressTextView
-                        app:pressImage="@drawable/shape_round_select"
-                        app:upImage="@drawable/shape_round"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:layout_centerVertical="true"
-                        android:background="@drawable/shape_round"
-                        android:gravity="center"
-                        android:minWidth="79dp"
-                        android:minHeight="79dp"
-                        android:textColor="#fff"
-                        android:textSize="40sp"
-                        tools:text="0" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/rl_add"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2">
-
-                    <com.example.widget.PressTextView
-                        app:pressImage="@drawable/shape_ovil_select"
-                        app:upImage="@drawable/shape_ovil"
-
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:background="@drawable/shape_ovil"
-                        android:gravity="center"
-                        android:minWidth="180dp"
-                        android:minHeight="79dp"
-                        android:text="加入"
-                        android:textColor="#fff"
-                        android:textSize="40sp" />
-                </RelativeLayout>
-
-
-            </LinearLayout>
+                android:minHeight="80dp"
+                android:text="创建会议"
+                android:textColor="#000000"
+                android:textSize="24sp" />
 
         </LinearLayout>
+    </com.example.widget.RecyclerViewScrollview>
 
-        <TextView
-            android:id="@+id/text"
-            android:layout_width="500dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginTop="20dp"
-            android:background="#00D5FF"
-            android:gravity="center"
-            android:minHeight="80dp"
-            android:text="创建会议"
-            android:textColor="#000000"
-            android:textSize="24sp" />
-    </LinearLayout>
-</com.example.widget.RecyclerViewScrollview>
+</RelativeLayout>

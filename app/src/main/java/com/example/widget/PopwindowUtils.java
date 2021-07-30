@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
+import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.example.base.Constants;
 import com.example.entity.ColorEntity;
@@ -146,7 +147,7 @@ public class PopwindowUtils {
 
     public static void showLongPop(Context context, RelativeLayout linearLayout,RelativeLayout relativeLayout) {
         View view = LayoutInflater.from(context).inflate(R.layout.dialog_long, null);
-        PopupWindow popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        MyPopupWindow popupWindow = new MyPopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT, ScreenUtils.getScreenHeight()-relativeLayout.getHeight());
         RelativeLayout rl1 = view.findViewById(R.id.rl_1);
         RelativeLayout rl2 = view.findViewById(R.id.rl_2);
         RelativeLayout rl3 = view.findViewById(R.id.rl_3);
@@ -213,6 +214,11 @@ public class PopwindowUtils {
         historyRecyclerView.setLayoutManager(new LinearLayoutManager(context));
         List<LongEntity> arrayList = new ArrayList<>();
         arrayList.add(new LongEntity("马克思", "今日12:00"));
+        arrayList.add(new LongEntity("马克思", "今日12:00"));
+        arrayList.add(new LongEntity("马克思", "今日12:00"));
+        arrayList.add(new LongEntity("马克思", "今日12:00"));
+        arrayList.add(new LongEntity("马克思", "今日12:00"));
+        arrayList.add(new LongEntity("马克思", "今日12:00"));
         historyRecyclerView.setAdapter(new CommonAdapter<LongEntity>(context, R.layout.item_long, arrayList) {
 
             @SuppressLint("ResourceType")
@@ -239,15 +245,23 @@ public class PopwindowUtils {
 
         //获取PopupWindow中View的宽高
         view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-        popupWindow.setBackgroundDrawable(new ColorDrawable(0xaa000000));//设置背景
+        //获取PopupWindow中View的宽高
+        int measuredWidth = view.getMeasuredWidth();
+        int measuredHeight = view.getMeasuredHeight();
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));//设置背景
         popupWindow.setFocusable(true);//popupwindow设置焦点
         popupWindow.setOutsideTouchable(true);//点击外面窗口消失
         int[] location = new int[2];
-        linearLayout.getLocationOnScreen(location);
+//        linearLayout.getLocationOnScreen(location);
 //        relativeLayout.getLocationOnScreen(location);
-        popupWindow.showAtLocation(linearLayout, Gravity.NO_GRAVITY, location[0] + linearLayout.getWidth(), location[1]);
+//        popupWindow.showAtLocation(linearLayout, Gravity.NO_GRAVITY, location[0] + linearLayout.getWidth(), location[1]);
 //        popupWindow.showAtLocation(relativeLayout, Gravity.NO_GRAVITY, location[0] , location[1] - relativeLayout.getHeight());
-//        popupWindow.showAtLocation(relativeLayout,Gravity.NO_GRAVITY,location[0]+relativeLayout.getWidth()/2,location[1]-relativeLayout.getMeasuredHeight());
+//        popupWindow.showAtLocation(relativeLayout,Gravity.NO_GRAVITY,location[0] ,measuredHeight);
+//        popupWindow.showAsDropDown(relativeLayout, 0, 0);
+      int  offsetY = -(popupWindow.getContentView().getMeasuredHeight()+relativeLayout.getHeight());
+        PopupWindowCompat.showAsDropDown(popupWindow, relativeLayout, 0,0, Gravity.TOP);
+
+
 
     }
 

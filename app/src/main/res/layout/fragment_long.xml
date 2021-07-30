@@ -2,6 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@mipmap/background"
     android:paddingLeft="20dp">
 
@@ -164,6 +166,7 @@
                     android:padding="10dp">
 
                     <EditText
+                        android:id="@+id/editText"
                         android:layout_width="match_parent"
                         android:layout_height="40dp"
                         android:layout_marginLeft="10dp"
@@ -177,16 +180,19 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="30dp"
                         android:gravity="center"
                         android:orientation="horizontal">
 
                         <RelativeLayout
+                            android:id="@+id/rl_1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1">
 
-                            <TextView
+                            <com.example.widget.PressTextView
+                                app:pressImage="@drawable/shape_round_select"
+                                app:upImage="@drawable/shape_round"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
@@ -200,15 +206,17 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/rl_2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1">
 
-                            <TextView
+                            <com.example.widget.PressTextView
+                                app:pressImage="@drawable/shape_round_select"
+                                app:upImage="@drawable/shape_round"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
-                                android:layout_centerVertical="true"
                                 android:background="@drawable/shape_round"
                                 android:gravity="center"
                                 android:minWidth="70dp"
@@ -219,11 +227,14 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/rl_3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1">
 
-                            <TextView
+                            <com.example.widget.PressTextView
+                                app:pressImage="@drawable/shape_round_select"
+                                app:upImage="@drawable/shape_round"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
@@ -238,11 +249,14 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/rl_delete"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1">
 
-                            <RelativeLayout
+                            <com.example.widget.PressRelativeLayout
+                                app:pressImage="@drawable/shape_round_select"
+                                app:upImage="@drawable/shape_round"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
@@ -254,8 +268,8 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_centerInParent="true"
-                                    android:src="@drawable/delete_icon" />
-                            </RelativeLayout>
+                                    android:src="@drawable/delete_long_icon" />
+                            </com.example.widget.PressRelativeLayout>
                         </RelativeLayout>
                     </LinearLayout>
 
@@ -267,11 +281,14 @@
                         android:orientation="horizontal">
 
                         <RelativeLayout
+                            android:id="@+id/rl_4"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1">
 
-                            <TextView
+                            <com.example.widget.PressTextView
+                                app:pressImage="@drawable/shape_round_select"
+                                app:upImage="@drawable/shape_round"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
@@ -286,11 +303,14 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/rl_5"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1">
 
-                            <TextView
+                            <com.example.widget.PressTextView
+                                app:pressImage="@drawable/shape_round_select"
+                                app:upImage="@drawable/shape_round"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
@@ -304,11 +324,14 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/rl_6"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1">
 
-                            <TextView
+                            <com.example.widget.PressTextView
+                                app:pressImage="@drawable/shape_round_select"
+                                app:upImage="@drawable/shape_round"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
@@ -323,14 +346,15 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/rl_dot"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1">
 
-                            <TextView
-
+                            <com.example.widget.PressTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+
                                 android:layout_centerInParent="true"
                                 android:background="@drawable/shape_round"
                                 android:gravity="center"
@@ -338,7 +362,9 @@
                                 android:minHeight="70dp"
                                 android:text="·"
                                 android:textColor="#FF00D5FF"
-                                android:textSize="40sp" />
+                                android:textSize="40sp"
+                                app:pressImage="@drawable/shape_round_select"
+                                app:upImage="@drawable/shape_round" />
                         </RelativeLayout>
                     </LinearLayout>
 
@@ -350,11 +376,14 @@
                         android:orientation="horizontal">
 
                         <RelativeLayout
+                            android:id="@+id/rl_7"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1">
 
-                            <TextView
+                            <com.example.widget.PressTextView
+                                app:pressImage="@drawable/shape_round_select"
+                                app:upImage="@drawable/shape_round"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
@@ -368,11 +397,14 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/rl_8"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1">
 
-                            <TextView
+                            <com.example.widget.PressTextView
+                                app:pressImage="@drawable/shape_round_select"
+                                app:upImage="@drawable/shape_round"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
@@ -387,11 +419,14 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/rl_9"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1">
 
-                            <TextView
+                            <com.example.widget.PressTextView
+                                app:pressImage="@drawable/shape_round_select"
+                                app:upImage="@drawable/shape_round"
 
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -406,11 +441,14 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/rl_0"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1">
 
-                            <TextView
+                            <com.example.widget.PressTextView
+                                app:pressImage="@drawable/shape_round_select"
+                                app:upImage="@drawable/shape_round"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
@@ -418,7 +456,7 @@
                                 android:gravity="center"
                                 android:minWidth="70dp"
                                 android:minHeight="70dp"
-                                android:text="中/英"
+                                android:text="0"
                                 android:textColor="#FF00D5FF"
                                 android:textSize="30sp" />
                         </RelativeLayout>
@@ -432,11 +470,14 @@
                         android:orientation="horizontal">
 
                         <RelativeLayout
+                            android:id="@+id/rl_star"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1">
 
-                            <TextView
+                            <com.example.widget.PressTextView
+                                app:pressImage="@drawable/shape_round_select"
+                                app:upImage="@drawable/shape_round"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"
@@ -450,6 +491,7 @@
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:visibility="invisible"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="1">
@@ -463,18 +505,20 @@
                                 android:gravity="center"
                                 android:minWidth="70dp"
                                 android:minHeight="70dp"
-                                android:text="0"
+                                tools:text="0"
                                 android:textColor="#FF00D5FF"
                                 android:textSize="40sp" />
                         </RelativeLayout>
 
                         <RelativeLayout
+                            android:id="@+id/rl_add"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_weight="2">
 
-                            <TextView
-
+                            <com.example.widget.PressTextView
+                                app:pressImage="@drawable/shape_ovil_select"
+                                app:upImage="@drawable/shape_ovil"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_centerInParent="true"

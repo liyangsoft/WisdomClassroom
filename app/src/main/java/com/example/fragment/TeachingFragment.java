@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.ConvertUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.example.base.BaseFragment;
 import com.example.base.Constants;
 import com.example.entity.GroupEntity;
@@ -109,6 +110,7 @@ public class TeachingFragment extends BaseFragment {
     private int choiceNum = 0;//选择数量
 
     private boolean isDraw = false;//是否处于画板状态
+    private RelativeLayout rlVideo;
 
 
     @Override
@@ -214,7 +216,7 @@ public class TeachingFragment extends BaseFragment {
         //远程
         rlLong.setOnClickListener(v -> {
             cutIcon(8);
-            PopwindowUtils.showLongPop(mContext,rlLong,rlBottomUtil);
+            PopwindowUtils.showLongPop(mContext, rlLong, rlBottomUtil);
         });
         rlMore.setOnClickListener(v -> {
             cutIcon(9);
@@ -222,20 +224,29 @@ public class TeachingFragment extends BaseFragment {
 
         //电子白板
         llPlank.setOnClickListener(v -> {
+            if (isDraw) {
+                ToastUtils.showShort("已处于画板状态，如需重新选择请先退出画板");
+                return;
+            }
             isDraw = true;
             cutDrawing(1);
             noClickExceptDrawing();
             EventBus.getDefault().post(new EventCenter<>(Constants.EVENT_VIEWPAGER, false));
-            opendrawing();
+            opendrawing(1);
 
         });
 
         //圈点
         llCircle.setOnClickListener(v -> {
+            if (isDraw) {
+                ToastUtils.showShort("已处于画板状态，如需重新选择请先退出画板");
+                return;
+            }
             isDraw = true;
             cutDrawing(2);
             noClickExceptDrawing();
             EventBus.getDefault().post(new EventCenter<>(Constants.EVENT_VIEWPAGER, false));
+            opendrawing(2);
         });
 
         //画笔
@@ -401,6 +412,8 @@ public class TeachingFragment extends BaseFragment {
         llLeftUtil = find(R.id.ll_left);
         rlExit = find(R.id.rl_exit);
 
+        rlVideo = find(R.id.rl_video);
+
     }
 
     /**
@@ -490,63 +503,80 @@ public class TeachingFragment extends BaseFragment {
 
     /**
      * 开启画板
+     *
+     * @param type 1.电子白板   2圈点
      */
-    private void opendrawing() {
+    private void opendrawing(int type) {
 
-        ViewTreeObserver viewTreeObserver = frameLayout.getViewTreeObserver();
-        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+
+        if (type == 1) {
+            ViewTreeObserver viewTreeObserver = frameLayout.getViewTreeObserver();
+            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    frameLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    //获取绘制完之后的宽度
+                    Bitmap mBitmap = Bitmap.createBitmap(frameLayout.getMeasuredWidth(), frameLayout.getMeasuredHeight(), Bitmap.Config.ARGB_8888);//创建一个新空白位图
+                    Canvas canvasBg = new Canvas(mBitmap);
+                    canvasBg.drawColor(Color.WHITE);
+                    drawing(mBitmap);
+                }
+            });
+        } else {
+            Bitmap mBitmap = cutBitmapFromView(rlVideo);
+            drawing(mBitmap);
+        }
+
+
+    }
+
+    /**
+     * 设置画板
+     *
+     * @param mBitmap
+     */
+    private void drawing(Bitmap mBitmap) {
+        mDoodle = mDoodleView = new DoodleView(mContext, mBitmap, true, new IDoodleListener() {
             @Override
-            public void onGlobalLayout() {
-                frameLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                //获取绘制完之后的宽度
-                Bitmap mBitmap = Bitmap.createBitmap(frameLayout.getMeasuredWidth(), frameLayout.getMeasuredHeight(), Bitmap.Config.ARGB_8888);//创建一个新空白位图
-                Canvas canvasBg = new Canvas(mBitmap);
-                canvasBg.drawColor(Color.WHITE);
-                mDoodle = mDoodleView = new DoodleView(mContext, mBitmap, true, new IDoodleListener() {
-                    @Override
-                    public void onSaved(IDoodle doodle, Bitmap doodleBitmap, Runnable callback) {
+            public void onSaved(IDoodle doodle, Bitmap doodleBitmap, Runnable callback) {
 
 
-                    }
+            }
 
-                    @Override
-                    public void onReady(IDoodle doodle) {
-                        // 设置初始值
-                        mDoodle.setSize(5);
-                        // 选择画笔
-                        mDoodle.setPen(DoodlePen.BRUSH);
-                        mDoodle.setShape(DoodleShape.HAND_WRITE);
-                        mDoodle.setColor(new DoodleColor(mDoodleParams.mPaintColor));
-                        mDoodle.setZoomerScale(mDoodleParams.mZoomerScale);//放大倍数
-                        mTouchGestureListener.setSupportScaleItem(mDoodleParams.mSupportScaleItem);
-                    }
-                });
-
-                mTouchGestureListener = new DoodleOnTouchGestureListener(mDoodleView, new DoodleOnTouchGestureListener.ISelectionListener() {
-                    // save states before being selected
-
-                    @Override
-                    public void onSelectedItem(IDoodle doodle, IDoodleSelectableItem selectableItem, boolean selected) {
-
-                    }
-
-                    @Override
-                    public void onCreateSelectableItem(IDoodle doodle, float x, float y) {
-
-                    }
-                });
-
-                IDoodleTouchDetector detector = new DoodleTouchDetector(getActivity().getApplicationContext(), mTouchGestureListener);
-                mDoodleView.setDefaultTouchDetector(detector);
-
-                mDoodle.setIsDrawableOutside(mDoodleParams.mIsDrawableOutside);
-                frameLayout.addView(mDoodleView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                mDoodle.setDoodleMinScale(mDoodleParams.mMinScale);
-                mDoodle.setDoodleMaxScale(mDoodleParams.mMaxScale);
+            @Override
+            public void onReady(IDoodle doodle) {
+                // 设置初始值
+                mDoodle.setSize(5);
+                // 选择画笔
+                mDoodle.setPen(DoodlePen.BRUSH);
+                mDoodle.setShape(DoodleShape.HAND_WRITE);
+                mDoodle.setColor(new DoodleColor(mDoodleParams.mPaintColor));
+                mDoodle.setZoomerScale(mDoodleParams.mZoomerScale);//放大倍数
+                mTouchGestureListener.setSupportScaleItem(mDoodleParams.mSupportScaleItem);
             }
         });
 
+        mTouchGestureListener = new DoodleOnTouchGestureListener(mDoodleView, new DoodleOnTouchGestureListener.ISelectionListener() {
+            // save states before being selected
 
+            @Override
+            public void onSelectedItem(IDoodle doodle, IDoodleSelectableItem selectableItem, boolean selected) {
+
+            }
+
+            @Override
+            public void onCreateSelectableItem(IDoodle doodle, float x, float y) {
+
+            }
+        });
+
+        IDoodleTouchDetector detector = new DoodleTouchDetector(getActivity().getApplicationContext(), mTouchGestureListener);
+        mDoodleView.setDefaultTouchDetector(detector);
+
+        mDoodle.setIsDrawableOutside(mDoodleParams.mIsDrawableOutside);
+        frameLayout.addView(mDoodleView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        mDoodle.setDoodleMinScale(mDoodleParams.mMinScale);
+        mDoodle.setDoodleMaxScale(mDoodleParams.mMaxScale);
     }
 
     /**
