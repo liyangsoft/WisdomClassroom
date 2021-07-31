@@ -63,7 +63,7 @@ android {
             signingConfig signingConfigs.debug
 
             ndk {
-                abiFilters "armeabi-v7a"//, "x86"
+                abiFilters "armeabi-v7a", "x86"
             }
         }
     }
@@ -77,9 +77,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    buildFeatures {
+    /*buildFeatures {
         dataBinding true
-    }
+    }*/
 }
 
 

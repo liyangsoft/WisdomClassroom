@@ -2,10 +2,10 @@
 package com.example.widget
 
 import android.content.Context
-import android.databinding.BaseObservable
-import android.databinding.Bindable
+//import android.databinding.BaseObservable
+//import android.databinding.Bindable
 
-class Config(): BaseObservable() {
+class Config {
     val filename = "Configfile"
 
     companion object{
@@ -56,68 +56,68 @@ class Config(): BaseObservable() {
     }
     
 
-    @Bindable
+//    @Bindable
     var width:String="1080"
-    set(value) {
+  /*  set(value) {
         field=value
         notifyPropertyChanged(BR.width)
-    }
+    }*/
             
-    @Bindable
+//    @Bindable
     var height:String="1920"
-    set(value) {
+   /* set(value) {
         field=value
         notifyPropertyChanged(BR.height)
-    }
+    }*/
             
-    @Bindable
+//    @Bindable
     var videoBitrate:String="16777216"
-    set(value) {
+   /* set(value) {
         field=value
         notifyPropertyChanged(BR.videoBitrate)
-    }
+    }*/
             
-    @Bindable
+//    @Bindable
     var videoFrameRate:String="24"
-    set(value) {
+    /*set(value) {
         field=value
         notifyPropertyChanged(BR.videoFrameRate)
-    }
+    }*/
             
-    @Bindable
+//    @Bindable
     var channelCount:String="1"
-    set(value) {
+    /*set(value) {
         field=value
         notifyPropertyChanged(BR.channelCount)
-    }
+    }*/
             
-    @Bindable
+//    @Bindable
     var voiceByteRate:String="384000"
-    set(value) {
+    /*set(value) {
         field=value
         notifyPropertyChanged(BR.voiceByteRate)
-    }
+    }*/
             
-    @Bindable
+//    @Bindable
     var voiceSampleRate:String="44100"
-    set(value) {
+    /*set(value) {
         field=value
         notifyPropertyChanged(BR.voiceSampleRate)
-    }
+    }*/
             
-    @Bindable
+//    @Bindable
     var channelMode:Int=16
-    set(value) {
+    /*set(value) {
         field=value
         notifyPropertyChanged(BR.channelMode)
-    }
+    }*/
             
-    @Bindable
+//    @Bindable
     var encodeFormat:Int=2
-    set(value) {
+   /* set(value) {
         field=value
         notifyPropertyChanged(BR.encodeFormat)
-    }
+    }*/
             
 }
     
