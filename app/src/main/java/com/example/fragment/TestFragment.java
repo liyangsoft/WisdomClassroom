@@ -78,45 +78,56 @@ public class TestFragment extends BaseFragment implements EasyPermissions.Permis
 
         TextView fen1 = find(R.id.fen1);
         fen1.setOnClickListener(v -> {
-            final EditText et = new EditText(getActivity());
+           /* final EditText et = new EditText(getActivity());
             new AlertDialog.Builder(getActivity()).setTitle("请输入IP")
                     .setIcon(android.R.drawable.sym_def_app_icon)
                     .setView(et)
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                           /* val intent = WatchContect.buildIntent(Intent(mainactivity,WatchContect::class.java),
+                           *//* val intent = WatchContect.buildIntent(Intent(mainactivity,WatchContect::class.java),
                             mainactivity.mInputModel.ipaddr)
-                            mainactivity.startActivity(intent)*/
+                            mainactivity.startActivity(intent)*//*
                             Intent intent = new Intent(getActivity(), WatchContect.class);
                             Bundle bundle = new Bundle();
                             bundle.putString("Address", et.getText().toString());
                             intent.putExtras(bundle);
                             getActivity().startActivity(intent);
                         }
-                    }).setNegativeButton("取消", null).show();
+                    }).setNegativeButton("取消", null).show();*/
+            Intent intent = new Intent(getActivity(), WatchContect.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("Address", "192.168.3.212");
+            intent.putExtras(bundle);
+            getActivity().startActivity(intent);
 
         });
 
         TextView fen2 = find(R.id.fen2);
         fen2.setOnClickListener(v -> {
             final EditText et = new EditText(getActivity());
-            new AlertDialog.Builder(getActivity()).setTitle("请输入IP")
+            /*new AlertDialog.Builder(getActivity()).setTitle("请输入IP")
                     .setIcon(android.R.drawable.sym_def_app_icon)
                     .setView(et)
                     .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                           /* val intent = WatchContect.buildIntent(Intent(mainactivity,WatchContect::class.java),
+                           *//* val intent = WatchContect.buildIntent(Intent(mainactivity,WatchContect::class.java),
                             mainactivity.mInputModel.ipaddr)
-                            mainactivity.startActivity(intent)*/
+                            mainactivity.startActivity(intent)*//*
                             Intent intent = new Intent(getActivity(), WatchContect.class);
                             Bundle bundle = new Bundle();
                             bundle.putString("Address", et.getText().toString());
                             intent.putExtras(bundle);
                             getActivity().startActivity(intent);
                         }
-                    }).setNegativeButton("取消", null).show();
+                    }).setNegativeButton("取消", null).show();*/
+
+            Intent intent = new Intent(getActivity(), WatchContect.class);
+            Bundle bundle = new Bundle();
+            bundle.putString("Address", "192.168.3.212");
+            intent.putExtras(bundle);
+            getActivity().startActivity(intent);
 
         });
 
