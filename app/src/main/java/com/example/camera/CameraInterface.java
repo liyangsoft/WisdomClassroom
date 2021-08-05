@@ -363,16 +363,16 @@ public class CameraInterface implements Camera.PreviewCallback {
             try {
                 mParams = mCamera.getParameters();
                 Camera.Size previewSize = CameraParamUtil.getInstance().getPreviewSize(mParams
-                        .getSupportedPreviewSizes(), 1000, screenProp);
+                        .getSupportedPreviewSizes(), 1920, screenProp);
                 Camera.Size pictureSize = CameraParamUtil.getInstance().getPictureSize(mParams
-                        .getSupportedPictureSizes(), 1200, screenProp);
+                        .getSupportedPictureSizes(), 1080, screenProp);
 
-                mParams.setPreviewSize(previewSize.width, previewSize.height);
+                mParams.setPreviewSize(1920, 1080);
 
                 preview_width = previewSize.width;
                 preview_height = previewSize.height;
 
-                mParams.setPictureSize(pictureSize.width, pictureSize.height);
+                mParams.setPictureSize(1920, 1080);
 
                 /*if (CameraParamUtil.getInstance().isSupportedFocusMode(
                         mParams.getSupportedFocusModes(),
@@ -394,12 +394,12 @@ public class CameraInterface implements Camera.PreviewCallback {
                         mParams.setFocusMode(Camera.Parameters.FLASH_MODE_AUTO);
                     }
                 }
-                if (CameraParamUtil.getInstance().isSupportedPictureFormats(mParams.getSupportedPictureFormats(),
+                /*if (CameraParamUtil.getInstance().isSupportedPictureFormats(mParams.getSupportedPictureFormats(),
                         ImageFormat.JPEG)) {
                     mParams.setPictureFormat(ImageFormat.JPEG);
                     mParams.setJpegQuality(100);
-                }
-//                mParams.setPreviewFormat(ImageFormat.YUY2);
+                }*/
+                mParams.setPreviewFormat(ImageFormat.YUY2);
                 mCamera.setParameters(mParams);
                 mParams = mCamera.getParameters();
                 mCamera.setPreviewDisplay(holder);  //SurfaceView
