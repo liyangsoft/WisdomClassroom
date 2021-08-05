@@ -1,11 +1,15 @@
 package com.example.fragment;
 
+import android.Manifest;
+import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.media.Image;
 import android.opengl.Visibility;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -24,6 +28,9 @@ import com.blankj.utilcode.util.ConvertUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.example.base.BaseFragment;
 import com.example.base.Constants;
+import com.example.camera.JCameraView;
+import com.example.camera.listener.ClickListener;
+import com.example.camera.listener.JCameraListener;
 import com.example.entity.GroupEntity;
 import com.example.eventbus.EventCenter;
 import com.example.widget.ChildClickableLinearLayout;
@@ -51,11 +58,13 @@ import cn.hzw.doodle.core.IDoodle;
 import cn.hzw.doodle.core.IDoodleItem;
 import cn.hzw.doodle.core.IDoodleSelectableItem;
 import cn.hzw.doodle.core.IDoodleTouchDetector;
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
 /**
  * 教学页面
  */
-public class TeachingFragment extends BaseFragment {
+public class TeachingFragment extends BaseFragment implements EasyPermissions.PermissionCallbacks {
 
     private RecyclerView recyclerView;
     private RelativeLayout rlRecyclerView;
@@ -111,7 +120,10 @@ public class TeachingFragment extends BaseFragment {
 
     private boolean isDraw = false;//是否处于画板状态
     private RelativeLayout rlVideo;
+    private JCameraView jCameraView;
+    private ImageView ivPlay;
 
+    private static final int RC_CAMERA_PERM = 123;
 
     @Override
     protected void onFirstUserVisible() {
@@ -139,6 +151,41 @@ public class TeachingFragment extends BaseFragment {
         setClick();
         initPaint();
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        //全屏显示
+        if (Build.VERSION.SDK_INT >= 19) {
+            View decorView = getActivity().getWindow().getDecorView();
+            decorView.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        } else {
+            View decorView = getActivity().getWindow().getDecorView();
+            int option = View.SYSTEM_UI_FLAG_FULLSCREEN;
+            decorView.setSystemUiVisibility(option);
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (null != jCameraView)
+            jCameraView.onResume();
+
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (null != jCameraView)
+            jCameraView.onPause();
     }
 
     private void inidRecycler() {
@@ -206,9 +253,13 @@ public class TeachingFragment extends BaseFragment {
         rlNotebook.setOnClickListener(v -> {
             cutIcon(5);
         });
+
+        //教师机
         rlTeacher.setOnClickListener(v -> {
-            cutIcon(6);
+            openCamera();
+
         });
+
         rlWifi.setOnClickListener(v -> {
             cutIcon(7);
         });
@@ -414,6 +465,9 @@ public class TeachingFragment extends BaseFragment {
 
         rlVideo = find(R.id.rl_video);
 
+        jCameraView = find(R.id.jcameraview);
+        ivPlay = find(R.id.iv_play);
+
     }
 
     /**
@@ -469,6 +523,17 @@ public class TeachingFragment extends BaseFragment {
         rlRecyclerView.setVisibility(position == 1 || position == 3 ? View.VISIBLE : View.GONE);
         isChoice = position == 3 ? true : false;
         choiceNum = 0;
+        switch (position) {
+            case 6:
+                jCameraView.setVisibility(View.VISIBLE);
+                break;
+
+            default:
+                ivPlay.setVisibility(View.VISIBLE);
+                break;
+        }
+
+
     }
 
     /**
@@ -611,4 +676,38 @@ public class TeachingFragment extends BaseFragment {
     protected boolean isBindEventBusHere() {
         return false;
     }
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+
+    }
+
+
+    @AfterPermissionGranted(RC_CAMERA_PERM)
+    public void openCamera() {
+        String[] perms = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+        if (EasyPermissions.hasPermissions(mContext, perms)) {
+            // Have permission, do the thing!
+            cutIcon(6);
+
+        } else {
+            // Ask for one permission
+            EasyPermissions.requestPermissions(this, "需要获取摄像头权限",
+                    RC_CAMERA_PERM, perms);
+        }
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            ToastUtils.showLong("没有摄像头权限，打开应用程序设置界面修改应用程序权限");
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
+    }
+
+
 }
