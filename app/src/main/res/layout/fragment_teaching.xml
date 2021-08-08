@@ -337,6 +337,40 @@
             android:textColor="#000000"
             android:textSize="24sp" />
     </com.example.widget.ChildClickableLinearLayout>
+    <!--视频组件-->
+    <RelativeLayout
+        android:id="@+id/rl_video"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/rl_bottom"
+        android:layout_toRightOf="@+id/ll_left"
+        android:background="#000">
+
+        <ImageView
+            android:id="@+id/iv_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/play_icon" />
+
+        <com.example.camera.JCameraView
+            android:id="@+id/jcameraview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:duration_max="10000"
+            app:iconMargin="20dp"
+            app:iconSize="30dp" />
+    </RelativeLayout>
+    <!--画板-->
+    <FrameLayout
+        android:id="@+id/doodle_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/rl_bottom"
+        android:layout_toRightOf="@+id/ll_left"
+        android:background="#ffffff"
+        android:visibility="gone" />
 
     <!--底部工具栏-->
     <RelativeLayout
@@ -595,40 +629,6 @@
             android:layout_width="160dp"
             android:layout_height="wrap_content" />
     </RelativeLayout>
-    <!--视频组件-->
-    <RelativeLayout
-        android:id="@+id/rl_video"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/rl_bottom"
-        android:layout_toRightOf="@+id/rl_recyclerView"
-        android:background="#000">
-
-        <ImageView
-            android:id="@+id/iv_play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:src="@mipmap/play_icon" />
-
-        <com.example.camera.JCameraView
-            android:visibility="gone"
-            android:id="@+id/jcameraview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:duration_max="10000"
-            app:iconMargin="20dp"
-            app:iconSize="30dp" />
-    </RelativeLayout>
-    <!--画板-->
-    <FrameLayout
-        android:id="@+id/doodle_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/rl_bottom"
-        android:layout_toRightOf="@+id/rl_recyclerView"
-        android:background="#ffffff"
-        android:visibility="gone" />
 
     <ImageView
         android:id="@+id/iv_recover"
