@@ -26,6 +26,11 @@ android {
             }
         }
 
+        ndk {
+            
+            abiFilters 'armeabi', 'armeabi-v7a', 'x86'
+        }
+
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -76,6 +81,17 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    packagingOptions {
+
+        pickFirst 'lib/x86/libijkplayer.so'
+        pickFirst 'lib/x86/libijksdl.so'
+        pickFirst 'lib/x86/libijkffmpeg.so'
+        pickFirst 'lib/armeabi-v7a/libijkplayer.so'
+        pickFirst 'lib/armeabi-v7a/libijkffmpeg.so'
+        pickFirst 'lib/armeabi-v7a/libijksdl.so'
+    }
+
+
 
     /*buildFeatures {
         dataBinding true
@@ -113,6 +129,12 @@ dependencies {
     implementation 'com.alibaba:fastjson:1.2.62'
 
     implementation 'pub.devrel:easypermissions:1.0.1'
+    implementation 'com.shuyu:gsyVideoPlayer-java:6.0.3'
+    implementation 'com.shuyu:gsyVideoPlayer-armv7a:6.0.3'
+    implementation 'com.shuyu:gsyVideoPlayer-x86:6.0.3'
+    implementation 'com.shuyu:gsyVideoPlayer-ex_so:6.0.3'
+
+//    implementation 'com.github.qingkouwei:oarplayer:0.0.1-SNAPSHOT'
 }
 
 

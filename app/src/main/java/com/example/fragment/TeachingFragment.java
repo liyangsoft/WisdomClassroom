@@ -37,6 +37,9 @@ import com.example.widget.ChildClickableLinearLayout;
 import com.example.widget.DialogUtils;
 import com.example.widget.PopwindowUtils;
 import com.example.wisdomclassroom.R;
+import com.shuyu.gsyvideoplayer.listener.GSYVideoShotListener;
+import com.shuyu.gsyvideoplayer.player.PlayerFactory;
+import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 
@@ -121,9 +124,11 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
     private boolean isDraw = false;//是否处于画板状态
     private RelativeLayout rlVideo;
     private JCameraView jCameraView;
-    private ImageView ivPlay;
+
 
     private static final int RC_CAMERA_PERM = 123;
+    private StandardGSYVideoPlayer videoPlayer;
+
 
     @Override
     protected void onFirstUserVisible() {
@@ -150,7 +155,14 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
         initId();
         setClick();
         initPaint();
+        initPlayer();
 
+    }
+
+    private void initPlayer() {
+        String source1 = "http://220.161.87.62:8800/hls/0/index.m3u8";
+        videoPlayer.setUp(source1, true, "");
+        videoPlayer.startPlayLogic();
     }
 
     @Override
@@ -176,16 +188,20 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
     @Override
     public void onResume() {
         super.onResume();
-        if (null != jCameraView)
+        if (null != jCameraView){
             jCameraView.onResume();
+        }
+        videoPlayer.onVideoResume();
 
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (null != jCameraView)
+        if (null != jCameraView){
             jCameraView.onPause();
+        }
+        videoPlayer.onVideoPause();
     }
 
     private void inidRecycler() {
@@ -466,7 +482,10 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
         rlVideo = find(R.id.rl_video);
 
         jCameraView = find(R.id.jcameraview);
-        ivPlay = find(R.id.iv_play);
+
+        videoPlayer = find(R.id.player);
+
+
 
     }
 
@@ -525,11 +544,15 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
         choiceNum = 0;
         switch (position) {
             case 6:
+                videoPlayer.onVideoPause();
+                videoPlayer.setVisibility(View.GONE);
                 jCameraView.setVisibility(View.VISIBLE);
                 break;
 
             default:
-                ivPlay.setVisibility(View.VISIBLE);
+                videoPlayer.onVideoResume();
+                videoPlayer.setVisibility(View.VISIBLE);
+                jCameraView.setVisibility(View.GONE);
                 break;
         }
 
@@ -573,23 +596,27 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
      */
     private void opendrawing(int type) {
 
-
         if (type == 1) {
-            ViewTreeObserver viewTreeObserver = frameLayout.getViewTreeObserver();
+            ViewTreeObserver viewTreeObserver = rlVideo.getViewTreeObserver();
             viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    frameLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    rlVideo.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     //获取绘制完之后的宽度
-                    Bitmap mBitmap = Bitmap.createBitmap(frameLayout.getMeasuredWidth(), frameLayout.getMeasuredHeight(), Bitmap.Config.ARGB_8888);//创建一个新空白位图
+                    Bitmap mBitmap = Bitmap.createBitmap(rlVideo.getMeasuredWidth(), rlVideo.getMeasuredHeight(), Bitmap.Config.ARGB_8888);//创建一个新空白位图
                     Canvas canvasBg = new Canvas(mBitmap);
                     canvasBg.drawColor(Color.WHITE);
                     drawing(mBitmap);
                 }
             });
         } else {
-            Bitmap mBitmap = cutBitmapFromView(rlVideo);
-            drawing(mBitmap);
+            videoPlayer.taskShotPic(new GSYVideoShotListener() {
+                @Override
+                public void getBitmap(Bitmap bitmap) {
+                    drawing(bitmap);
+                }
+            });
+
         }
 
 
