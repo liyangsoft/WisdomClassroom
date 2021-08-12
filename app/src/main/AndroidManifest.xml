@@ -25,7 +25,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".WatchContect"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
             android:name=".MainActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
@@ -46,6 +46,12 @@
             android:value="1200" />
 
         <service android:name="com.example.service.MediaReaderService" />
+
+        <service
+            android:name="com.example.service.smartControl.SocketService"
+            android:enabled="true"
+            android:exported="true">
+        </service>
     </application>
 
 </manifest>

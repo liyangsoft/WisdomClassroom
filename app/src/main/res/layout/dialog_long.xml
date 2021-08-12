@@ -47,7 +47,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
-              android:visibility="gone">
+                android:visibility="gone">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/history_recycler"
@@ -485,7 +485,7 @@
                             android:textColor="#fff"
                             android:textSize="40sp"
                             app:pressImage="@drawable/shape_ovil_select"
-                            app:upImage="@drawable/shape_ovil" />
+                            app:upImage="@drawable/shape_ovil"/>
                     </RelativeLayout>
 
 
@@ -495,7 +495,7 @@
 
             <TextView
                 android:id="@+id/text"
-                android:layout_width="500dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_marginTop="20dp"
@@ -504,7 +504,7 @@
                 android:minHeight="80dp"
                 android:text="创建会议"
                 android:textColor="#000000"
-                android:textSize="24sp" />
+                android:textSize="24sp"/>
 
         </LinearLayout>
     </com.example.widget.RecyclerViewScrollview>

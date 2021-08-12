@@ -295,7 +295,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:id="@+id/lightOpen">
 
                     <ImageView
                         android:layout_width="40dp"
@@ -317,10 +318,11 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="20dp"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:id="@+id/lightClose">
 
                     <ImageView
-                        android:layout_width="40dp"
+                        android:layout_width="31dp"
                         android:layout_height="40dp"
                         android:src="@drawable/close_icon" />
 

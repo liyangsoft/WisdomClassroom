@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.SizeUtils;
@@ -163,8 +164,49 @@ public class PopwindowUtils {
         RelativeLayout rlStar = view.findViewById(R.id.rl_star);
         RelativeLayout rlAdd = view.findViewById(R.id.rl_add);
         EditText editText = view.findViewById(R.id.editText);
+        TextView textView=view.findViewById(R.id.text);
+
+        textView.setOnClickListener(v -> {
+            popupWindow.dismiss();
+            //切换界面
+            View rtmpView = LayoutInflater.from(context).inflate(R.layout.rtmp_show, null);
+            MyPopupWindow rtmpPopupWindow = new MyPopupWindow(rtmpView, ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.getScreenHeight()-relativeLayout.getHeight());
+            rtmpPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));//设置背景
+            rtmpPopupWindow.setFocusable(true);//popupwindow设置焦点
+            PopupWindowCompat.showAsDropDown(rtmpPopupWindow, relativeLayout, 0,0, Gravity.TOP);
+            MeetingDeal meetingDeal=new MeetingDeal();
+            meetingDeal.createMeeting(rtmpView);
+
+            LinearLayout linearLayout1=rtmpView.findViewById(R.id.closeMeeting);
+            linearLayout1.setOnClickListener(v1 -> {
+                try {
+                    meetingDeal.changeToMeet(rtmpView);
+                    rtmpPopupWindow.dismiss();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        });
         rlAdd.setOnClickListener(v -> {
             popupWindow.dismiss();
+            //切换界面
+            View rtmpView = LayoutInflater.from(context).inflate(R.layout.rtmp_show, null);
+            MyPopupWindow rtmpPopupWindow = new MyPopupWindow(rtmpView, ViewGroup.LayoutParams.MATCH_PARENT, ScreenUtils.getScreenHeight()-relativeLayout.getHeight());
+            rtmpPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));//设置背景
+            rtmpPopupWindow.setFocusable(true);//popupwindow设置焦点
+            PopupWindowCompat.showAsDropDown(rtmpPopupWindow, relativeLayout, 0,0, Gravity.TOP);
+            MeetingDeal meetingDeal=new MeetingDeal();
+            meetingDeal.joinMeeting(editText.getText().toString(),rtmpView);
+
+            LinearLayout linearLayout1=rtmpView.findViewById(R.id.closeMeeting);
+            linearLayout1.setOnClickListener(v1 -> {
+                try {
+                    meetingDeal.changeToMeet(rtmpView);
+                    rtmpPopupWindow.dismiss();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         });
         rl1.setOnClickListener(v -> {
             setEdittext(editText, "1");
