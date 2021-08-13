@@ -152,10 +152,31 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
     private SurfaceView mSurfaceView;
     private SurfaceHolder mSurfaceHolder;
     private VideoPlayThread mdiaPlayThread;
+    private VideoPlayThread mdiaPlayThread1;
+    private VideoPlayThread mdiaPlayThread2;
+    private VideoPlayThread mdiaPlayThread3;
+    private VideoPlayThread mdiaPlayThread4;
     private MediaProjectionManager mediaProjectionManager;
     private MyApplication myApplication;
 
     private SocketClientThread socketClientThread;
+    private LinearLayout contrast;
+
+    private SurfaceHolder surfaceHolder1;
+
+    private SurfaceHolder surfaceHolder2;
+    private SurfaceHolder surfaceHolder3;
+    private SurfaceHolder surfaceHolder4;
+    private SocketClientThread socketClientThread1;
+    private SocketClientThread socketClientThread2;
+    private SocketClientThread socketClientThread3;
+    private SocketClientThread socketClientThread4;
+    private LinearLayout llSufaceTop;
+    private LinearLayout llSufaceBottom;
+
+    private List<String> ipList = new ArrayList<>();
+    private SurfaceView surfaceView4;
+    private SurfaceView surfaceView3;
 
 
     @Override
@@ -243,6 +264,30 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
         if (null != mdiaPlayThread) {
             mdiaPlayThread.exit();
         }
+        if (null != socketClientThread1) {
+            socketClientThread1.exit();
+        }
+        if (null != mdiaPlayThread1) {
+            mdiaPlayThread1.exit();
+        }
+        if (null != socketClientThread2) {
+            socketClientThread2.exit();
+        }
+        if (null != mdiaPlayThread2) {
+            mdiaPlayThread2.exit();
+        }
+        if (null != socketClientThread3) {
+            socketClientThread3.exit();
+        }
+        if (null != mdiaPlayThread3) {
+            mdiaPlayThread3.exit();
+        }
+        if (null != socketClientThread4) {
+            socketClientThread4.exit();
+        }
+        if (null != mdiaPlayThread4) {
+            mdiaPlayThread4.exit();
+        }
     }
 
     private void inidRecycler() {
@@ -250,8 +295,9 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
         arrayList.clear();
         arrayList.add(new GroupEntity("分组一", "192.168.3.212"));
         arrayList.add(new GroupEntity("分组二", "192.168.3.213"));
-//        arrayList.add(new GroupEntity("分组三","172.31.98.211"));
-//        arrayList.add(new GroupEntity("分组四","172.31.98.218"));
+        arrayList.add(new GroupEntity("分组三", "172.31.98.211"));
+        arrayList.add(new GroupEntity("分组四", "172.31.98.218"));
+        arrayList.add(new GroupEntity("分组四", "172.31.99.63"));
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setAdapter(new CommonAdapter<GroupEntity>(mContext, R.layout.item_group, arrayList) {
 
@@ -272,6 +318,7 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
                             if (position == i) {
                                 choiceNum++;
                                 arrayList.get(i).setCheck(true);
+                                ipList.add(groupEntity.getIp());
                             }
 
                         } else {
@@ -284,9 +331,10 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
 
                     }
                     notifyDataSetChanged();
+                    ToastUtils.showLong("正在加载页面，请稍等~");
+
                     //单选分组
                     if (!isChoice) {
-                        ToastUtils.showLong("正在加载页面，请稍等~");
                         if (null != socketClientThread) {
                             socketClientThread.exit();
                             socketClientThread = null;
@@ -296,6 +344,21 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
                             mdiaPlayThread = null;
                         }
                         initSocket(groupEntity.getIp(), 9091);
+
+                    } else {
+                        if (ipList.size() == 2) {
+                            llSufaceTop.setVisibility(View.VISIBLE);
+                            initContrastSocket1(ipList.get(0), 9091);
+                            initContrastSocket2(ipList.get(1), 9091);
+
+                        } else if (ipList.size() == 3) {
+                            llSufaceBottom.setVisibility(View.VISIBLE);
+
+                            initContrastSocket3(ipList.get(2), 9091);
+                        } else if (ipList.size() == 4) {
+
+                            initContrastSocket4(ipList.get(3), 9091);
+                        }
 
                     }
 
@@ -361,6 +424,20 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
         mSurfaceView = find(R.id.surfaceView_watch);
         mSurfaceHolder = mSurfaceView.getHolder();
         mSurfaceHolder.addCallback(this);
+
+        contrast = find(R.id.contrast);
+        llSufaceTop = find(R.id.ll_suface_top);
+        SurfaceView surfaceView1 = find(R.id.surfaceView1);
+        surfaceHolder1 = surfaceView1.getHolder();
+        SurfaceView surfaceView2 = find(R.id.surfaceView2);
+        surfaceHolder2 = surfaceView2.getHolder();
+
+        llSufaceBottom = find(R.id.ll_suface_bottom);
+        surfaceView3 = find(R.id.surfaceView3);
+        surfaceHolder3 = surfaceView3.getHolder();
+        surfaceView4 = find(R.id.surfaceView4);
+        surfaceHolder4 = surfaceView4.getHolder();
+
     }
 
     private void setClick() {
@@ -376,7 +453,10 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
             checPermiss();
             cutIcon(2);
         });
+
+        //对比
         rlContrast.setOnClickListener(v -> {
+            videoPlayer.onVideoPause();
             inidRecycler();
             cutIcon(3);
         });
@@ -630,6 +710,122 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
 
     }
 
+    /**
+     * 连接socket1
+     *
+     * @param ip
+     * @param port
+     */
+    private void initContrastSocket1(String ip, int port) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    socketClientThread1 = new ClientThread(ip, port);
+                    socketClientThread1.connect();
+                    socketClientThread1.start();
+                    if (null == mdiaPlayThread1) {
+                        mdiaPlayThread1 = new VideoPlayThread(surfaceHolder1.getSurface(), socketClientThread1.getDataPackList());
+                    }
+
+                    mdiaPlayThread1.start();
+                } catch (Exception e) {
+
+                    ToastUtils.showShort("连接失败" + e.getMessage());
+                }
+
+            }
+        }).start();
+
+    }
+
+    /**
+     * 连接socket2
+     *
+     * @param ip
+     * @param port
+     */
+    private void initContrastSocket2(String ip, int port) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    socketClientThread2 = new ClientThread(ip, port);
+                    socketClientThread2.connect();
+                    socketClientThread2.start();
+                    if (null == mdiaPlayThread2) {
+                        mdiaPlayThread2 = new VideoPlayThread(surfaceHolder2.getSurface(), socketClientThread2.getDataPackList());
+                    }
+
+                    mdiaPlayThread2.start();
+                } catch (Exception e) {
+
+                    ToastUtils.showShort("连接失败" + e.getMessage());
+                }
+
+            }
+        }).start();
+
+    }
+
+    /**
+     * 连接socket3
+     *
+     * @param ip
+     * @param port
+     */
+    private void initContrastSocket3(String ip, int port) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    socketClientThread3 = new ClientThread(ip, port);
+                    socketClientThread3.connect();
+                    socketClientThread3.start();
+                    if (null == mdiaPlayThread3) {
+                        mdiaPlayThread3 = new VideoPlayThread(surfaceHolder3.getSurface(), socketClientThread3.getDataPackList());
+                    }
+
+                    mdiaPlayThread3.start();
+                } catch (Exception e) {
+
+                    ToastUtils.showShort("连接失败" + e.getMessage());
+                }
+
+            }
+        }).start();
+
+    }
+
+    /**
+     * 连接socket4
+     *
+     * @param ip
+     * @param port
+     */
+    private void initContrastSocket4(String ip, int port) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    socketClientThread4 = new ClientThread(ip, port);
+                    socketClientThread4.connect();
+                    socketClientThread4.start();
+                    if (null == mdiaPlayThread4) {
+                        mdiaPlayThread4 = new VideoPlayThread(surfaceHolder4.getSurface(), socketClientThread4.getDataPackList());
+                    }
+
+                    mdiaPlayThread4.start();
+                } catch (Exception e) {
+
+                    ToastUtils.showShort("连接失败" + e.getMessage());
+                }
+
+            }
+        }).start();
+
+    }
+
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
 
@@ -659,10 +855,7 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
                     ToastUtils.showShort("错误:" + t.getMessage());
                 }
             });
-
-
         }
-
     }
 
     /**
@@ -722,6 +915,9 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
             case 1:
                 mSurfaceView.setVisibility(View.VISIBLE);
                 break;
+            case 3:
+                contrast.setVisibility(View.VISIBLE);
+                break;
             case 6:
                 videoPlayer.onVideoPause();
                 videoPlayer.setVisibility(View.GONE);
@@ -731,9 +927,9 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
             default:
                 videoPlayer.onVideoResume();
                 videoPlayer.setVisibility(View.VISIBLE);
-                videoPlayer.onVideoResume();
                 jCameraView.setVisibility(View.GONE);
                 mSurfaceView.setVisibility(View.GONE);
+                contrast.setVisibility(View.GONE);
                 break;
         }
 
