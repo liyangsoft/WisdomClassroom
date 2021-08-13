@@ -22,7 +22,7 @@ abstract class SocketClientThread(ip: String, port: Int) : Thread(TAG) {
     /**
      * @throws Exception
      */
-    fun connect() {
+    fun connect()  {
         client.connect(socketAddress)
         Log.d(TAG, "连接成功")
     }

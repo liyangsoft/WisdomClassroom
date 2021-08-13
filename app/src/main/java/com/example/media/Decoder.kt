@@ -4,6 +4,7 @@ import android.media.MediaCodec
 import android.media.MediaFormat
 import android.util.Log
 import android.view.Surface
+import com.blankj.utilcode.util.ToastUtils
 import java.io.IOException
 
 class Decoder(width: Int, height: Int, fps: Int, surface: Surface) {
@@ -17,12 +18,17 @@ class Decoder(width: Int, height: Int, fps: Int, surface: Surface) {
      * @throws Exception 初始化编码器失败
      */
     fun init() {
-        mCodec = MediaCodec.createDecoderByType(MIME_TYPE)
-        val mediaFormat = MediaFormat.createVideoFormat(MIME_TYPE,
-                VIDEO_WIDTH, VIDEO_HEIGHT)
-        mCodec.configure(mediaFormat, mSurface,
-                null, 0)
-        mCodec.start()
+        try {
+            mCodec = MediaCodec.createDecoderByType(MIME_TYPE)
+            val mediaFormat = MediaFormat.createVideoFormat(MIME_TYPE,
+                    VIDEO_WIDTH, VIDEO_HEIGHT)
+            mCodec.configure(mediaFormat, mSurface,
+                    null, 0)
+            mCodec.start()
+        } catch (e: Exception) {
+            ToastUtils.showShort(e.message)
+        }
+
     }
 
     var mCount = 0

@@ -1,11 +1,16 @@
 package com.example.fragment;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.media.Image;
+import android.media.projection.MediaProjection;
+import android.media.projection.MediaProjectionManager;
 import android.opengl.Visibility;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,7 +18,10 @@ import android.os.Environment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -23,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.blankj.utilcode.util.ConvertUtils;
 import com.blankj.utilcode.util.ToastUtils;
@@ -33,10 +42,15 @@ import com.example.camera.listener.ClickListener;
 import com.example.camera.listener.JCameraListener;
 import com.example.entity.GroupEntity;
 import com.example.eventbus.EventCenter;
+import com.example.service.MediaReaderService;
 import com.example.widget.ChildClickableLinearLayout;
 import com.example.widget.DialogUtils;
 import com.example.widget.PopwindowUtils;
+import com.example.wisdomclassroom.MyApplication;
 import com.example.wisdomclassroom.R;
+import com.sc.lesa.mediashar.jlib.server.SocketClientThread;
+import com.sc.lesa.mediashar.jlib.threads.VideoPlayThread;
+import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.listener.GSYVideoShotListener;
 import com.shuyu.gsyvideoplayer.player.PlayerFactory;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
@@ -44,8 +58,10 @@ import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
 
 import org.greenrobot.eventbus.EventBus;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,10 +80,13 @@ import cn.hzw.doodle.core.IDoodleTouchDetector;
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
 
+import static com.blankj.utilcode.util.ServiceUtils.startService;
+import static io.reactivex.internal.schedulers.SchedulerPoolFactory.start;
+
 /**
  * 教学页面
  */
-public class TeachingFragment extends BaseFragment implements EasyPermissions.PermissionCallbacks {
+public class TeachingFragment extends BaseFragment implements EasyPermissions.PermissionCallbacks, SurfaceHolder.Callback {
 
     private RecyclerView recyclerView;
     private RelativeLayout rlRecyclerView;
@@ -127,7 +146,16 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
 
 
     private static final int RC_CAMERA_PERM = 123;
+    private static final int RC_SCREEN_PERM = 124;
+    private int REQUEST_MEDIA_PROJECTION = 18;
     private StandardGSYVideoPlayer videoPlayer;
+    private SurfaceView mSurfaceView;
+    private SurfaceHolder mSurfaceHolder;
+    private VideoPlayThread mdiaPlayThread;
+    private MediaProjectionManager mediaProjectionManager;
+    private MyApplication myApplication;
+
+    private SocketClientThread socketClientThread;
 
 
     @Override
@@ -152,6 +180,7 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
 
     @Override
     protected void initViewsAndEvents() {
+        myApplication = (MyApplication) getActivity().getApplication();
         initId();
         setClick();
         initPaint();
@@ -188,7 +217,7 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
     @Override
     public void onResume() {
         super.onResume();
-        if (null != jCameraView){
+        if (null != jCameraView) {
             jCameraView.onResume();
         }
         videoPlayer.onVideoResume();
@@ -198,21 +227,31 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
     @Override
     public void onPause() {
         super.onPause();
-        if (null != jCameraView){
+        if (null != jCameraView) {
             jCameraView.onPause();
         }
         videoPlayer.onVideoPause();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        GSYVideoManager.releaseAllVideos();
+        if (null != socketClientThread) {
+            socketClientThread.exit();
+        }
+        if (null != mdiaPlayThread) {
+            mdiaPlayThread.exit();
+        }
+    }
+
     private void inidRecycler() {
         arrayList = new ArrayList<>();
         arrayList.clear();
-        arrayList.add(new GroupEntity("分组一"));
-        arrayList.add(new GroupEntity("分组二"));
-        arrayList.add(new GroupEntity("分组三"));
-        arrayList.add(new GroupEntity("分组四"));
-        arrayList.add(new GroupEntity("分组五"));
-        arrayList.add(new GroupEntity("分组六"));
+        arrayList.add(new GroupEntity("分组一", "192.168.3.212"));
+        arrayList.add(new GroupEntity("分组二", "192.168.3.213"));
+//        arrayList.add(new GroupEntity("分组三","172.31.98.211"));
+//        arrayList.add(new GroupEntity("分组四","172.31.98.218"));
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setAdapter(new CommonAdapter<GroupEntity>(mContext, R.layout.item_group, arrayList) {
 
@@ -245,18 +284,96 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
 
                     }
                     notifyDataSetChanged();
+                    //单选分组
+                    if (!isChoice) {
+                        ToastUtils.showLong("正在加载页面，请稍等~");
+                        if (null != socketClientThread) {
+                            socketClientThread.exit();
+                            socketClientThread = null;
+                        }
+                        if (null != mdiaPlayThread) {
+                            mdiaPlayThread.exit();
+                            mdiaPlayThread = null;
+                        }
+                        initSocket(groupEntity.getIp(), 9091);
+
+                    }
+
                 });
 
             }
         });
     }
 
+    private void initId() {
+
+        recyclerView = find(R.id.recyclerView);
+        rlRecyclerView = find(R.id.rl_recyclerView);
+        llGroup = find(R.id.ll_group);
+        rlBroadcast = find(R.id.rl_broadcast);
+        rlContrast = find(R.id.rl_contrast);
+        rlSpeak = find(R.id.rl_speak);
+        rlNotebook = find(R.id.rl_notebook);
+        rlTeacher = find(R.id.rl_teacher);
+        rlWifi = find(R.id.rl_wifi);
+        rlLong = find(R.id.rl_long);
+        rlMore = find(R.id.rl_more);
+
+        llPlank = find(R.id.ll_plank);
+        ivPlank = find(R.id.iv_plank);
+        tvPlank = find(R.id.tv_plank);
+        llCircle = find(R.id.ll_circle);
+        ivCircle = find(R.id.iv_circle);
+        tvCircle = find(R.id.tv_circle);
+
+        rlPen = find(R.id.rl_pen);
+        ivPen = find(R.id.iv_pen);
+        rlEraser = find(R.id.rl_eraser);
+        ivEraser = find(R.id.iv_eraser);
+        rlOrthogon = find(R.id.rl_orthogon);
+        ivOrthogon = find(R.id.iv_orthogon);
+        rlBack = find(R.id.rl_back);
+        ivBack = find(R.id.iv_back);
+        rlGo = find(R.id.rl_go);
+        ivGo = find(R.id.iv_go);
+        rlAdd = find(R.id.rl_add);
+        ivAdd = find(R.id.iv_add);
+        rlLast = find(R.id.rl_last);
+        ivLast = find(R.id.iv_last);
+        rlNext = find(R.id.rl_next);
+        ivNext = find(R.id.iv_next);
+
+
+        frameLayout = find(R.id.doodle_container);
+
+        button = find(R.id.button);
+        ivRecover = find(R.id.iv_recover);
+        rlHide = find(R.id.line1);
+        rlBottomUtil = find(R.id.rl_bottom);
+        llLeftUtil = find(R.id.ll_left);
+        rlExit = find(R.id.rl_exit);
+
+        rlVideo = find(R.id.rl_video);
+
+        jCameraView = find(R.id.jcameraview);
+
+        videoPlayer = find(R.id.player);
+        mSurfaceView = find(R.id.surfaceView_watch);
+        mSurfaceHolder = mSurfaceView.getHolder();
+        mSurfaceHolder.addCallback(this);
+    }
+
     private void setClick() {
+        //分组
         llGroup.setOnClickListener(v -> {
+            videoPlayer.onVideoPause();
             inidRecycler();
+
             cutIcon(1);
         });
+        //广播
         rlBroadcast.setOnClickListener(v -> {
+            checPermiss();
             cutIcon(2);
         });
         rlContrast.setOnClickListener(v -> {
@@ -431,61 +548,120 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
         });
     }
 
-    private void initId() {
+    //获取屏幕权限
+    @AfterPermissionGranted(RC_SCREEN_PERM)
+    private void checPermiss() {
+        String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
+        if (EasyPermissions.hasPermissions(getActivity(), perms)) {
+            requestCapturePermission();
+        } else {
+            EasyPermissions.requestPermissions(this, "需要访问存储权限",
+                    RC_SCREEN_PERM, perms);
+        }
+    }
 
-        recyclerView = find(R.id.recyclerView);
-        rlRecyclerView = find(R.id.rl_recyclerView);
-        llGroup = find(R.id.ll_group);
-        rlBroadcast = find(R.id.rl_broadcast);
-        rlContrast = find(R.id.rl_contrast);
-        rlSpeak = find(R.id.rl_speak);
-        rlNotebook = find(R.id.rl_notebook);
-        rlTeacher = find(R.id.rl_teacher);
-        rlWifi = find(R.id.rl_wifi);
-        rlLong = find(R.id.rl_long);
-        rlMore = find(R.id.rl_more);
+    private void requestCapturePermission() {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            //5.0 之后才允许使用屏幕截图
+            mediaProjectionManager = (MediaProjectionManager) mContext.getSystemService(
+                    Context.MEDIA_PROJECTION_SERVICE);
+            startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(),
+                    REQUEST_MEDIA_PROJECTION);
+        } else {
+            Toast.makeText(mContext, "系统版本低于5.0!", Toast.LENGTH_SHORT).show();
+        }
+    }
 
-        llPlank = find(R.id.ll_plank);
-        ivPlank = find(R.id.iv_plank);
-        tvPlank = find(R.id.tv_plank);
-        llCircle = find(R.id.ll_circle);
-        ivCircle = find(R.id.iv_circle);
-        tvCircle = find(R.id.tv_circle);
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_MEDIA_PROJECTION) {
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                MediaProjection mediaProjection = mediaProjectionManager.getMediaProjection(resultCode, data);
+                if (mediaProjection == null) {
 
-        rlPen = find(R.id.rl_pen);
-        ivPen = find(R.id.iv_pen);
-        rlEraser = find(R.id.rl_eraser);
-        ivEraser = find(R.id.iv_eraser);
-        rlOrthogon = find(R.id.rl_orthogon);
-        ivOrthogon = find(R.id.iv_orthogon);
-        rlBack = find(R.id.rl_back);
-        ivBack = find(R.id.iv_back);
-        rlGo = find(R.id.rl_go);
-        ivGo = find(R.id.iv_go);
-        rlAdd = find(R.id.rl_add);
-        ivAdd = find(R.id.iv_add);
-        rlLast = find(R.id.rl_last);
-        ivLast = find(R.id.iv_last);
-        rlNext = find(R.id.rl_next);
-        ivNext = find(R.id.iv_next);
+                    return;
+                }
 
+                myApplication.mediaProjection = mediaProjection;
+                startServer();
+                MediaReaderService.ServerStatus serverStatus = myApplication.getServerStatus();
+                serverStatus = MediaReaderService.ServerStatus.STARTED;
+            }
+        }
+    }
 
-        frameLayout = find(R.id.doodle_container);
-
-        button = find(R.id.button);
-        ivRecover = find(R.id.iv_recover);
-        rlHide = find(R.id.line1);
-        rlBottomUtil = find(R.id.rl_bottom);
-        llLeftUtil = find(R.id.ll_left);
-        rlExit = find(R.id.rl_exit);
-
-        rlVideo = find(R.id.rl_video);
-
-        jCameraView = find(R.id.jcameraview);
-
-        videoPlayer = find(R.id.player);
+    /**
+     * 开启
+     */
+    private void startServer() {
+        Intent intent = new Intent(getActivity(), MediaReaderService.class);
+        intent.putExtra("CMD", 1);
+        startService(intent);
+    }
 
 
+    /**
+     * 连接socket
+     *
+     * @param ip
+     * @param port
+     */
+    private void initSocket(String ip, int port) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    socketClientThread = new ClientThread(ip, port);
+                    socketClientThread.connect();
+                    socketClientThread.start();
+                    if (null == mdiaPlayThread) {
+                        mdiaPlayThread = new VideoPlayThread(mSurfaceHolder.getSurface(), socketClientThread.getDataPackList());
+                    }
+
+                    mdiaPlayThread.start();
+                } catch (Exception e) {
+
+                    ToastUtils.showShort("连接失败" + e.getMessage());
+                }
+
+            }
+        }).start();
+
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+
+    }
+
+    private class ClientThread extends SocketClientThread {
+
+        public ClientThread(@NotNull String ip, int port) {
+            super(ip, port);
+        }
+
+        @Override
+        public void onError(@NotNull Throwable t) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ToastUtils.showShort("错误:" + t.getMessage());
+                }
+            });
+
+
+        }
 
     }
 
@@ -543,6 +719,9 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
         isChoice = position == 3 ? true : false;
         choiceNum = 0;
         switch (position) {
+            case 1:
+                mSurfaceView.setVisibility(View.VISIBLE);
+                break;
             case 6:
                 videoPlayer.onVideoPause();
                 videoPlayer.setVisibility(View.GONE);
@@ -552,7 +731,9 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
             default:
                 videoPlayer.onVideoResume();
                 videoPlayer.setVisibility(View.VISIBLE);
+                videoPlayer.onVideoResume();
                 jCameraView.setVisibility(View.GONE);
+                mSurfaceView.setVisibility(View.GONE);
                 break;
         }
 
@@ -727,7 +908,7 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
     @Override
     public void onPermissionsDenied(int requestCode, List<String> perms) {
         if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-            ToastUtils.showLong("没有摄像头权限，打开应用程序设置界面修改应用程序权限");
+            ToastUtils.showLong("没有相关权限，打开应用程序设置界面修改应用程序权限");
         }
     }
 
