@@ -52,7 +52,7 @@ class MediaReaderService : Service() {
         val config: Config = Config.getConfig(this)
         try {
             videoSender = VideoSender(socketServerThread, myApplication.mediaProjection,
-                    config.width.toInt(), config.height.toInt(),
+                    1920,1080,
                     config.videoBitrate.toInt(), config.videoFrameRate.toInt()
             )
             voiceSender = VoiceSender(socketServerThread,

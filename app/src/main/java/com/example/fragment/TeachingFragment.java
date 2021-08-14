@@ -297,7 +297,7 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
         arrayList.add(new GroupEntity("分组二", "192.168.3.213"));
         arrayList.add(new GroupEntity("分组三", "172.31.98.211"));
         arrayList.add(new GroupEntity("分组四", "172.31.98.218"));
-        arrayList.add(new GroupEntity("分组四", "172.31.99.63"));
+        arrayList.add(new GroupEntity("分组四", "192.168.124.3"));
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setAdapter(new CommonAdapter<GroupEntity>(mContext, R.layout.item_group, arrayList) {
 
@@ -914,6 +914,8 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
         switch (position) {
             case 1:
                 mSurfaceView.setVisibility(View.VISIBLE);
+                break;
+            case 2:
                 break;
             case 3:
                 contrast.setVisibility(View.VISIBLE);
