@@ -6,12 +6,14 @@ import android.javax.sip.SipException;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.sip.SipStackAndroid;
 import com.example.wisdomclassroom.R;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
+import com.shuyu.gsyvideoplayer.utils.GSYVideoType;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
 import java.text.ParseException;
@@ -75,6 +77,7 @@ public class MeetingDeal {
                 videoView.setVisibility(View.VISIBLE);
                 RelativeLayout rl = view.findViewById(R.id.meetWaiting);
                 rl.setVisibility(View.GONE);
+                videoView.getBackButton().setVisibility(View.GONE);
                 videoView.setUp(instance.rtmpUrl, true, "");
                 videoView.startPlayLogic();
                 TextView textView = view.findViewById(R.id.meetingId);
@@ -100,8 +103,8 @@ public class MeetingDeal {
             videoView.getPlayer().release();
         }*/
         StandardGSYVideoPlayer videoView = (StandardGSYVideoPlayer) view.findViewById(R.id.video_view);
+        videoView.release();
         GSYVideoManager.releaseAllVideos();
-
     }
 
     //加入会议

@@ -210,7 +210,7 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
     }
 
     private void initPlayer() {
-        String source1 = "http://220.161.87.62:8800/hls/0/index.m3u8";
+        String source1 = "rtmp://192.168.107.88:1935/live/sub";
         videoPlayer.setUp(source1, true, "");
         videoPlayer.startPlayLogic();
     }

@@ -93,6 +93,52 @@ public class ControlFragment extends BaseFragment {
                 }
             }).start();
         });
+
+        LinearLayout openWindowLinearLayout=find(R.id.windowOpen);
+        openWindowLinearLayout.setOnClickListener(v -> {
+            //打开窗帘
+            LightControl lightControl=new LightControl();
+            lightControl.setCode(1002);
+            lightControl.setId("010100124b001acca677");
+            lightControl.setEp(3);
+//            lightControl.setPid(260);
+//            lightControl.setDid(0);
+            lightControl.setSerial(RandomUtil.randomInt(32));
+            Map<String, Object> control=new HashMap<String,Object>();
+            control.put("cts",1);
+            lightControl.setControl(control);
+            Gson gson=new Gson();
+            String responseStr =gson.toJson(lightControl);
+            new Thread(new Runnable(){
+                @Override
+                public void run() {
+                    socketService.sendData(responseStr);
+                }
+            }).start();
+        });
+
+        LinearLayout closeWindowLinearLayout=find(R.id.windowClose);
+        closeWindowLinearLayout.setOnClickListener(v -> {
+            //关灯
+            LightControl lightControl=new LightControl();
+            lightControl.setCode(1002);
+            lightControl.setId("010100124b001acca677");
+            lightControl.setEp(3);
+//            lightControl.setPid(260);
+//            lightControl.setDid(0);
+            lightControl.setSerial(RandomUtil.randomInt(32));
+            Map<String, Object> control=new HashMap<String,Object>();
+            control.put("cts",0);
+            lightControl.setControl(control);
+            Gson gson=new Gson();
+            String responseStr =gson.toJson(lightControl);
+            new Thread(new Runnable(){
+                @Override
+                public void run() {
+                    socketService.sendData(responseStr);
+                }
+            }).start();
+        });
     }
 
     @Override
