@@ -25,12 +25,11 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".WatchContect"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".MainActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
-            >
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -46,12 +45,21 @@
             android:value="1200" />
 
         <service android:name="com.example.service.MediaReaderService" />
+        <service android:name="com.example.service.MediaReaderOneService" />
+        <service android:name="com.example.service.MediaReaderTwoService" />
+        <service android:name="com.example.service.MediaReaderThreeService" />
+        <service android:name="com.example.service.MediaReaderFourService" />
+
 
         <service
             android:name="com.example.service.smartControl.SocketService"
             android:enabled="true"
-            android:exported="true">
-        </service>
+            android:exported="true"></service>
+
+        <service android:name="com.example.service.GroupOneService" />
+        <service android:name="com.example.service.GroupTwoService" />
+        <service android:name="com.example.service.GroupThreeService" />
+        <service android:name="com.example.service.GroupFourService" />
     </application>
 
 </manifest>

@@ -1,38 +1,53 @@
 package com.example.wisdomclassroom;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.Presentation;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.res.Resources;
+import android.content.Intent;
 import android.hardware.display.DisplayManager;
-import android.media.MediaRouter;
+import android.media.projection.MediaProjection;
+import android.media.projection.MediaProjectionManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.FrameLayout;
+import android.widget.Toast;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.example.adapter.VPFragmentAdapter;
 import com.example.base.BaseActivity;
 import com.example.base.BaseLazyFragment;
 import com.example.base.Constants;
+
 import com.example.eventbus.EventCenter;
 import com.example.fragment.TeachingFragment;
 import com.example.fragment.MainFragment;
-import com.example.fragment.TestFragment;
 import com.example.presentation.MyPresentation;
+
+import com.example.service.GroupFourService;
+import com.example.service.GroupOneService;
+import com.example.service.GroupThreeService;
+import com.example.service.GroupTwoService;
+import com.example.service.MediaReaderService;
+import com.example.service.MediaReaderOneService;
+import com.example.service.MediaReaderTwoService;
+import com.example.service.MediaReaderThreeService;
+import com.example.service.MediaReaderFourService;
 import com.example.widget.XViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import pub.devrel.easypermissions.AfterPermissionGranted;
+import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends BaseActivity {
+import static com.blankj.utilcode.util.ServiceUtils.startService;
+
+
+public class MainActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks {
 
 
     private XViewPager viewPager;
@@ -41,6 +56,13 @@ public class MainActivity extends BaseActivity {
     private List<BaseLazyFragment> fragments = new ArrayList<>();
     private DisplayManager mDisplayManager;
     private Presentation mPresentation;
+    private MediaProjectionManager mediaProjectionManager;
+    private int REQUEST_MEDIA_PROJECTION = 18;
+    private MyApplication myApplication;
+    private static final int RC_SCREEN_PERM = 124;
+
+
+
 
     @Override
     protected void getBundleExtras(Bundle extras) {
@@ -67,12 +89,69 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void initViewsAndEvents() {
+        myApplication = (MyApplication) getApplication();
         viewPager = find(R.id.viewPager);
         initFragment();
         initView();
 
         mDisplayManager = (DisplayManager) this.getSystemService(Context.DISPLAY_SERVICE);
+        initSocket();
+        checPermiss();
     }
+
+    private void initSocket() {
+
+        startService(new Intent(getApplicationContext(), GroupOneService.class));
+        startService(new Intent(getApplicationContext(), GroupTwoService.class));
+        startService(new Intent(getApplicationContext(), GroupFourService.class));
+        startService(new Intent(getApplicationContext(), GroupThreeService.class));
+
+    }
+
+    //获取屏幕权限
+    @AfterPermissionGranted(RC_SCREEN_PERM)
+    private void checPermiss() {
+        String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
+        if (EasyPermissions.hasPermissions(this, perms)) {
+            requestCapturePermission();
+        } else {
+            EasyPermissions.requestPermissions(this, "需要访问存储权限",
+                    RC_SCREEN_PERM, perms);
+        }
+    }
+
+
+    private void requestCapturePermission() {
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
+            //5.0 之后才允许使用屏幕截图
+            mediaProjectionManager = (MediaProjectionManager) mContext.getSystemService(
+                    Context.MEDIA_PROJECTION_SERVICE);
+            startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(),
+                    REQUEST_MEDIA_PROJECTION);
+        } else {
+            Toast.makeText(mContext, "系统版本低于5.0!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_MEDIA_PROJECTION) {
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                MediaProjection mediaProjection = mediaProjectionManager.getMediaProjection(resultCode, data);
+                if (mediaProjection == null) {
+
+                    return;
+                }
+
+                myApplication.mediaProjection = mediaProjection;
+                startServer();
+                MediaReaderService.ServerStatus serverStatus = myApplication.getServerStatus();
+                serverStatus = MediaReaderService.ServerStatus.STARTED;
+            }
+        }
+    }
+
 
     @Override
     protected void onNetworkDisConnected() {
@@ -92,6 +171,32 @@ public class MainActivity extends BaseActivity {
     @Override
     protected TransitionMode getOverridePendingTransitionMode() {
         return null;
+    }
+
+
+    /**
+     * 开启
+     */
+    private void startServer() {
+       /* Intent intent = new Intent(this, MediaReaderService.class);
+        intent.putExtra("CMD", 1);
+        startService(intent);
+*/
+        Intent intent1 = new Intent(this, MediaReaderOneService.class);
+        intent1.putExtra("CMD", 1);
+        startService(intent1);
+
+        Intent intent2 = new Intent(this, MediaReaderTwoService.class);
+        intent2.putExtra("CMD", 1);
+        startService(intent2);
+
+        Intent intent3 = new Intent(this, MediaReaderThreeService.class);
+        intent3.putExtra("CMD", 1);
+        startService(intent3);
+
+        Intent intent4 = new Intent(this, MediaReaderFourService.class);
+        intent4.putExtra("CMD", 1);
+        startService(intent4);
     }
 
 
@@ -201,6 +306,24 @@ public class MainActivity extends BaseActivity {
                 mPresentation = null;
             }
         }
+    }
+
+
+    @Override
+    public void onPermissionsGranted(int requestCode, List<String> perms) {
+
+    }
+
+    @Override
+    public void onPermissionsDenied(int requestCode, List<String> perms) {
+        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
+            ToastUtils.showLong("没有相关权限，打开应用程序设置界面修改应用程序权限");
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
 
 }
