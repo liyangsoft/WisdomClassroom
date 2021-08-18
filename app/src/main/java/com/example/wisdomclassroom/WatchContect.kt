@@ -1,13 +1,14 @@
 package com.example.wisdomclassroom
 
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.view.KeyEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import android.view.View
 import android.widget.Toast
+import com.example.base.Constants
 import com.sc.lesa.mediashar.jlib.server.SocketClientThread
 import com.sc.lesa.mediashar.jlib.threads.VideoPlayThread
 import com.sc.lesa.mediashar.jlib.threads.VoicePlayThread
@@ -109,7 +110,7 @@ class WatchContect : AppCompatActivity(), SurfaceHolder.Callback {
     }
 
 
-    private inner class ClientThread(ip: String) : SocketClientThread(ip, 9091) {
+    private inner class ClientThread(ip: String) : SocketClientThread(ip, Constants.mainPort) {
         override fun onError(t: Throwable) {
             runOnUiThread {
                 Toast.makeText(this@WatchContect, "${"错误"}:${t.message}", Toast.LENGTH_SHORT).show()

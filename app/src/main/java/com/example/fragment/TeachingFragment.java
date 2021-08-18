@@ -35,24 +35,26 @@ import android.widget.Toast;
 
 import com.blankj.utilcode.util.ConvertUtils;
 import com.blankj.utilcode.util.ToastUtils;
+
 import com.example.base.BaseFragment;
 import com.example.base.Constants;
 import com.example.camera.JCameraView;
-import com.example.camera.listener.ClickListener;
-import com.example.camera.listener.JCameraListener;
+
 import com.example.entity.GroupEntity;
+
 import com.example.eventbus.EventCenter;
-import com.example.service.MediaReaderService;
+
+import com.example.service.GroupFourService;
+import com.example.service.GroupOneService;
+import com.example.service.GroupThreeService;
+import com.example.service.GroupTwoService;
 import com.example.widget.ChildClickableLinearLayout;
-import com.example.widget.DialogUtils;
 import com.example.widget.PopwindowUtils;
-import com.example.wisdomclassroom.MyApplication;
 import com.example.wisdomclassroom.R;
 import com.sc.lesa.mediashar.jlib.server.SocketClientThread;
 import com.sc.lesa.mediashar.jlib.threads.VideoPlayThread;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
 import com.shuyu.gsyvideoplayer.listener.GSYVideoShotListener;
-import com.shuyu.gsyvideoplayer.player.PlayerFactory;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 import com.zhy.adapter.recyclerview.CommonAdapter;
 import com.zhy.adapter.recyclerview.base.ViewHolder;
@@ -62,8 +64,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import cn.hzw.doodle.DoodleColor;
 import cn.hzw.doodle.DoodleOnTouchGestureListener;
@@ -146,8 +152,12 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
 
 
     private static final int RC_CAMERA_PERM = 123;
-    private static final int RC_SCREEN_PERM = 124;
-    private int REQUEST_MEDIA_PROJECTION = 18;
+
+
+    private boolean isBroadcast = false; //是否广播状态
+    private boolean isContrast = false; //是否对比状态
+
+    private int currentLookGrooup = -1;//当前查看的分组position
     private StandardGSYVideoPlayer videoPlayer;
     private SurfaceView mSurfaceView;
     private SurfaceHolder mSurfaceHolder;
@@ -156,8 +166,7 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
     private VideoPlayThread mdiaPlayThread2;
     private VideoPlayThread mdiaPlayThread3;
     private VideoPlayThread mdiaPlayThread4;
-    private MediaProjectionManager mediaProjectionManager;
-    private MyApplication myApplication;
+
 
     private SocketClientThread socketClientThread;
     private LinearLayout contrast;
@@ -201,7 +210,6 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
 
     @Override
     protected void initViewsAndEvents() {
-        myApplication = (MyApplication) getActivity().getApplication();
         initId();
         setClick();
         initPaint();
@@ -293,11 +301,10 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
     private void inidRecycler() {
         arrayList = new ArrayList<>();
         arrayList.clear();
-        arrayList.add(new GroupEntity("分组一", "192.168.3.212"));
-        arrayList.add(new GroupEntity("分组二", "192.168.3.213"));
-        arrayList.add(new GroupEntity("分组三", "172.31.98.211"));
-        arrayList.add(new GroupEntity("分组四", "172.31.98.218"));
-        arrayList.add(new GroupEntity("分组四", "192.168.124.3"));
+        arrayList.add(new GroupEntity("分组一", Constants.groupIP1));
+        arrayList.add(new GroupEntity("分组二", Constants.groupIP2));
+        arrayList.add(new GroupEntity("分组三", Constants.groupIP3));
+        arrayList.add(new GroupEntity("分组四", Constants.groupIP4));
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext));
         recyclerView.setAdapter(new CommonAdapter<GroupEntity>(mContext, R.layout.item_group, arrayList) {
 
@@ -343,21 +350,22 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
                             mdiaPlayThread.exit();
                             mdiaPlayThread = null;
                         }
-                        initSocket(groupEntity.getIp(), 9091);
+                        currentLookGrooup = position;
+                        initSocket(groupEntity.getIp(), Constants.mainPort);
 
                     } else {
                         if (ipList.size() == 2) {
                             llSufaceTop.setVisibility(View.VISIBLE);
-                            initContrastSocket1(ipList.get(0), 9091);
-                            initContrastSocket2(ipList.get(1), 9091);
+                            initContrastSocket1(ipList.get(0), Constants.mainPort);
+                            initContrastSocket2(ipList.get(1), Constants.mainPort);
 
                         } else if (ipList.size() == 3) {
                             llSufaceBottom.setVisibility(View.VISIBLE);
 
-                            initContrastSocket3(ipList.get(2), 9091);
+                            initContrastSocket3(ipList.get(2), Constants.mainPort);
                         } else if (ipList.size() == 4) {
 
-                            initContrastSocket4(ipList.get(3), 9091);
+                            initContrastSocket4(ipList.get(3), Constants.mainPort);
                         }
 
                     }
@@ -450,12 +458,58 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
         });
         //广播
         rlBroadcast.setOnClickListener(v -> {
-            checPermiss();
-            cutIcon(2);
+            if (isContrast) {
+                ToastUtils.showLong("请先退出对比");
+                return;
+            }
+            String str;
+            if (isBroadcast) {
+                //取消广播
+                rlBroadcast.setBackgroundColor(Color.parseColor("#484A6D"));
+                str = "0";
+            } else {
+                //开启广播
+                rlBroadcast.setBackgroundColor(Color.parseColor("#0B70E0"));
+                str = "1";
+            }
+            //开启广播
+            isBroadcast = !isBroadcast;
+            if (currentLookGrooup != -1) {
+                switch (currentLookGrooup) {
+                    case 1:
+                        GroupTwoService.sendTcpMessage(str);
+                        GroupThreeService.sendTcpMessage(str);
+                        GroupFourService.sendTcpMessage(str);
+                        break;
+                    case 2:
+                        GroupOneService.sendTcpMessage(str);
+                        GroupThreeService.sendTcpMessage(str);
+                        GroupFourService.sendTcpMessage(str);
+                        break;
+                    case 3:
+                        GroupOneService.sendTcpMessage(str);
+                        GroupTwoService.sendTcpMessage(str);
+                        GroupFourService.sendTcpMessage(str);
+                        break;
+                    case 4:
+                        GroupOneService.sendTcpMessage(str);
+                        GroupTwoService.sendTcpMessage(str);
+                        GroupThreeService.sendTcpMessage(str);
+                        break;
+                }
+            }
+
+
         });
 
         //对比
         rlContrast.setOnClickListener(v -> {
+
+            if (isBroadcast) {
+                ToastUtils.showLong("请先退出广播");
+                return;
+            }
+
             videoPlayer.onVideoPause();
             inidRecycler();
             cutIcon(3);
@@ -626,58 +680,6 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
             showHideUtil(true);
 
         });
-    }
-
-    //获取屏幕权限
-    @AfterPermissionGranted(RC_SCREEN_PERM)
-    private void checPermiss() {
-        String[] perms = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO};
-        if (EasyPermissions.hasPermissions(getActivity(), perms)) {
-            requestCapturePermission();
-        } else {
-            EasyPermissions.requestPermissions(this, "需要访问存储权限",
-                    RC_SCREEN_PERM, perms);
-        }
-    }
-
-    private void requestCapturePermission() {
-        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
-            //5.0 之后才允许使用屏幕截图
-            mediaProjectionManager = (MediaProjectionManager) mContext.getSystemService(
-                    Context.MEDIA_PROJECTION_SERVICE);
-            startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(),
-                    REQUEST_MEDIA_PROJECTION);
-        } else {
-            Toast.makeText(mContext, "系统版本低于5.0!", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_MEDIA_PROJECTION) {
-            if (resultCode == Activity.RESULT_OK && data != null) {
-                MediaProjection mediaProjection = mediaProjectionManager.getMediaProjection(resultCode, data);
-                if (mediaProjection == null) {
-
-                    return;
-                }
-
-                myApplication.mediaProjection = mediaProjection;
-                startServer();
-                MediaReaderService.ServerStatus serverStatus = myApplication.getServerStatus();
-                serverStatus = MediaReaderService.ServerStatus.STARTED;
-            }
-        }
-    }
-
-    /**
-     * 开启
-     */
-    private void startServer() {
-        Intent intent = new Intent(getActivity(), MediaReaderService.class);
-        intent.putExtra("CMD", 1);
-        startService(intent);
     }
 
 
@@ -900,7 +902,7 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
      */
     private void cutIcon(int position) {
         llGroup.setBackgroundColor(position == 1 ? Color.parseColor("#0B70E0") : Color.parseColor("#484A6D"));
-        rlBroadcast.setBackgroundColor(position == 2 ? Color.parseColor("#0B70E0") : Color.parseColor("#484A6D"));
+//        rlBroadcast.setBackgroundColor(position == 2 ? Color.parseColor("#0B70E0") : Color.parseColor("#484A6D"));
         rlContrast.setBackgroundColor(position == 3 ? Color.parseColor("#0B70E0") : Color.parseColor("#484A6D"));
         rlSpeak.setBackgroundColor(position == 4 ? Color.parseColor("#0B70E0") : Color.parseColor("#484A6D"));
         rlNotebook.setBackgroundColor(position == 5 ? Color.parseColor("#0B70E0") : Color.parseColor("#484A6D"));
@@ -919,6 +921,7 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
                 break;
             case 3:
                 contrast.setVisibility(View.VISIBLE);
+                isContrast = true;
                 break;
             case 6:
                 videoPlayer.onVideoPause();
@@ -932,6 +935,8 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
                 jCameraView.setVisibility(View.GONE);
                 mSurfaceView.setVisibility(View.GONE);
                 contrast.setVisibility(View.GONE);
+                isContrast = false;
+
                 break;
         }
 
@@ -1114,6 +1119,5 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
-
 
 }
