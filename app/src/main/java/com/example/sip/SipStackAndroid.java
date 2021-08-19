@@ -77,7 +77,7 @@ public class SipStackAndroid implements SipListener {
     public static String localEndpoint = localIp + ":" + localPort;
     public static String transport = "udp";
 
-    public static String remoteIp = "192.168.107.33";
+    public static String remoteIp = "192.168.3.235";
     public static int remotePort = 50004;
     public static String remoteEndpoint = remoteIp + ":" + remotePort;
     // Save the created ACK request, to respond to retransmitted 2xx
@@ -317,22 +317,22 @@ public class SipStackAndroid implements SipListener {
     }
 
     public void createMeeting() throws SdpException, ParseException, SipException, InvalidArgumentException {
-        SessionDescription sessionDescription=createSdp();
-        register("sip:conference_factory@"+remoteIp+":"+remotePort,sessionDescription);
+        SessionDescription sessionDescription=createSdp("test1");
+        register("sip:conference_factory@"+remoteIp+":"+remotePort,"test1",sessionDescription);
     }
 
     public void joinMetting(String meetingId) throws InvalidArgumentException, SipException, SdpException, ParseException {
-        SessionDescription sessionDescription=createSdp();
-        register("sip:conference_"+meetingId+"@"+remoteIp+":"+remotePort,sessionDescription);
+        SessionDescription sessionDescription=createSdp("test2");
+        register("sip:conference_"+meetingId+"@"+remoteIp+":"+remotePort,"test2",sessionDescription);
     }
 
-    private SessionDescription createSdp() throws SdpException, ParseException, SipException, InvalidArgumentException{
+    private SessionDescription createSdp(String userName) throws SdpException, ParseException, SipException, InvalidArgumentException{
         SessionDescriptionImpl sessionDescription=new SessionDescriptionImpl();
         ProtoVersionField version=new ProtoVersionField();
         version.setProtoVersion(0);
         sessionDescription.setVersion(version);
         OriginField origin=new OriginField();
-        origin.setUsername("test1");
+        origin.setUsername(userName);
         origin.setSessionId(63045986);
         origin.setSessionVersion(82947337);
         origin.setNetworkType("IN");
@@ -369,6 +369,8 @@ public class SipStackAndroid implements SipListener {
         formats.add(96);
         MediaDescriptionImpl mediaDescription=createMediaInfo(localIp,1935,attributes,formats);//创建会议接受信息可以随便写
         mediaDescriptions.add(mediaDescription);
+
+
         //发送媒体信息
         Vector sendAttributes=new Vector();
         AttributeField sendAttributeField=new AttributeField();
@@ -380,11 +382,11 @@ public class SipStackAndroid implements SipListener {
         sendAttributes.add(sendAttributeField);
         sendAttributeField=new AttributeField();
         sendAttributeField.setName("fmtp");
-        sendAttributeField.setValue("102 type=mainstream;protocol=rtmp;playpath=live/sub;audio=disabled;");
+        sendAttributeField.setValue("102 type=mainstream;protocol=rtmp;playpath=live/tf;audio=disabled;");
         sendAttributes.add(sendAttributeField);
         Vector sendFormats=new Vector();
         sendFormats.add(102);
-        MediaDescriptionImpl sendMediaDescription=createMediaInfo("192.168.107.86",1935,sendAttributes,sendFormats);
+        MediaDescriptionImpl sendMediaDescription=createMediaInfo("192.168.3.221",1935,sendAttributes,sendFormats);
         mediaDescriptions.add(sendMediaDescription);
 
         Vector vgaSendAttributes=new Vector();
@@ -401,7 +403,91 @@ public class SipStackAndroid implements SipListener {
         vgaSendAttributes.add(vgaAttributeField);
         Vector vgaFormats=new Vector();
         vgaFormats.add(104);
-        MediaDescriptionImpl vgaSendMediaDescription=createMediaInfo("192.168.107.86",1935,vgaSendAttributes,vgaFormats);
+        MediaDescriptionImpl vgaSendMediaDescription=createMediaInfo("192.168.3.221",1935,vgaSendAttributes,vgaFormats);
+        mediaDescriptions.add(vgaSendMediaDescription);
+
+        sessionDescription.setMediaDescriptions(mediaDescriptions);
+        return sessionDescription;
+    }
+
+    private SessionDescription createJoinSdp(String userName) throws SdpException, ParseException, SipException, InvalidArgumentException{
+        SessionDescriptionImpl sessionDescription=new SessionDescriptionImpl();
+        ProtoVersionField version=new ProtoVersionField();
+        version.setProtoVersion(0);
+        sessionDescription.setVersion(version);
+        OriginField origin=new OriginField();
+        origin.setUsername(userName);
+        origin.setSessionId(63045986);
+        origin.setSessionVersion(82947337);
+        origin.setNetworkType("IN");
+        origin.setAddressType("IP4");
+        origin.setAddress(localIp);
+        sessionDescription.setOrigin(origin);
+        SessionNameField sessionNameField=new SessionNameField();
+        sessionNameField.setSessionName("sip call");
+        sessionDescription.setSessionName(sessionNameField);
+        ConnectionField connectionField=new ConnectionField();
+        connectionField.setNetworkType("IN");
+        connectionField.setAddressType("IP4");
+        connectionField.setAddress(localIp);
+        sessionDescription.setConnection(connectionField);
+        TimeField timeField=new TimeField();
+        timeField.setStartTime(0);
+        timeField.setStopTime(0);
+        TimeDescriptionImpl timeDescription=new TimeDescriptionImpl(timeField);
+        Vector timeDescriptions=new Vector();
+        timeDescriptions.add(timeDescription);
+        sessionDescription.setTimeDescriptions(timeDescriptions);
+        //媒体信息
+        Vector mediaDescriptions=new Vector();
+
+        Vector attributes=new Vector();
+        AttributeField attributeField=new AttributeField();
+        attributeField.setValue("recvonly");
+        attributes.add(attributeField);
+        attributeField=new AttributeField();
+        attributeField.setName("fmtp");
+        attributeField.setValue("96 protocol=rtmp;playpath=live/mixed96;audio=disabled;");
+        attributes.add(attributeField);
+        Vector formats=new Vector();
+        formats.add(96);
+        MediaDescriptionImpl mediaDescription=createMediaInfo(localIp,1935,attributes,formats);//创建会议接受信息可以随便写
+        mediaDescriptions.add(mediaDescription);
+
+
+        //发送媒体信息
+        Vector sendAttributes=new Vector();
+        AttributeField sendAttributeField=new AttributeField();
+        sendAttributeField.setValue("sendonly");
+        sendAttributes.add(sendAttributeField);
+        sendAttributeField=new AttributeField();
+        sendAttributeField.setName("content");
+        sendAttributeField.setValue("main");
+        sendAttributes.add(sendAttributeField);
+        sendAttributeField=new AttributeField();
+        sendAttributeField.setName("fmtp");
+        sendAttributeField.setValue("106 type=mainstream;protocol=rtmp;playpath=live/tf;audio=disabled;");
+        sendAttributes.add(sendAttributeField);
+        Vector sendFormats=new Vector();
+        sendFormats.add(102);
+        MediaDescriptionImpl sendMediaDescription=createMediaInfo("192.168.3.235",1935,sendAttributes,sendFormats);
+        mediaDescriptions.add(sendMediaDescription);
+
+        Vector vgaSendAttributes=new Vector();
+        AttributeField vgaAttributeField=new AttributeField();
+        vgaAttributeField.setValue("sendonly");
+        vgaSendAttributes.add(vgaAttributeField);
+        vgaAttributeField=new AttributeField();
+        vgaAttributeField.setName("content");
+        vgaAttributeField.setValue("vga");
+        vgaSendAttributes.add(vgaAttributeField);
+        vgaAttributeField=new AttributeField();
+        vgaAttributeField.setName("fmtp");
+        vgaAttributeField.setValue("108 type=mainstream;protocol=rtmp;playpath=live/screen;audio=disabled;");
+        vgaSendAttributes.add(vgaAttributeField);
+        Vector vgaFormats=new Vector();
+        vgaFormats.add(104);
+        MediaDescriptionImpl vgaSendMediaDescription=createMediaInfo("192.168.3.221",1935,vgaSendAttributes,vgaFormats);
         mediaDescriptions.add(vgaSendMediaDescription);
 
         sessionDescription.setMediaDescriptions(mediaDescriptions);
@@ -425,9 +511,26 @@ public class SipStackAndroid implements SipListener {
         return mediaDescription;
     }
 
-    private void register(String to, Object message) throws ParseException,
+    private MediaDescriptionImpl createRtpMediaInfo(String ip, int port, Vector attributes, Vector formats,String type) throws SdpException {
+        MediaDescriptionImpl mediaDescription=new MediaDescriptionImpl();
+        MediaField mediaField=new MediaField();
+        mediaField.setMedia(type);
+        mediaField.setPort(port);
+        mediaField.setProto("RTP/AVP");
+        mediaField.setFormats(formats);
+        mediaDescription.setMedia(mediaField);
+        ConnectionField connectionField=new ConnectionField();
+        connectionField.setNetworkType("IN");
+        connectionField.setAddressType("IP4");
+        connectionField.setAddress(ip);
+        mediaDescription.setConnectionField(connectionField);
+        mediaDescription.setAttributes(attributes);
+        return mediaDescription;
+    }
+
+    private void register(String to,String userName, Object message) throws ParseException,
             InvalidArgumentException, SipException {
-        SipURI from = addressFactory.createSipURI("test1", localEndpoint);
+        SipURI from = addressFactory.createSipURI(userName, localEndpoint);
 
         Address fromNameAddress = addressFactory.createAddress(from);
 

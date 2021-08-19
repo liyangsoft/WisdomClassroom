@@ -12,9 +12,11 @@ import android.view.ViewGroup;
 import com.example.base.BaseFragment;
 import com.example.eventbus.EventCenter;
 import com.example.wisdomclassroom.R;
+import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
 public class CourseFragment extends BaseFragment {
 
+    private StandardGSYVideoPlayer livePlayer;
     @Override
     protected void onFirstUserVisible() {
 
@@ -37,7 +39,14 @@ public class CourseFragment extends BaseFragment {
 
     @Override
     protected void initViewsAndEvents() {
+        livePlayer = find(R.id.livePlayer);
+        initPlayer();
+    }
 
+    private void initPlayer() {
+        String source1 = "rtmp://192.168.107.88:1935/live/sub";
+        livePlayer.setUp(source1, true, "");
+        livePlayer.startPlayLogic();
     }
 
     @Override

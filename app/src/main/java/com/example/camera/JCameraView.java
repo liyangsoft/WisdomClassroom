@@ -9,6 +9,7 @@ import android.hardware.Camera;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -36,6 +37,8 @@ import com.example.camera.view.CameraView;
 import com.example.wisdomclassroom.R;
 
 import java.io.IOException;
+import java.net.Socket;
+import java.text.DecimalFormat;
 
 
 public class JCameraView extends FrameLayout implements CameraInterface.CameraOpenOverCallback, SurfaceHolder
@@ -103,6 +106,15 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     private int iconRight = 0;      //右图标
     private int duration = 0;       //录制时间
 
+    //触摸反馈变量
+    private long firstClickTime;
+    private long secondClickTime;
+    private long stillTime;
+    private boolean isUp=false;
+    private boolean isDoubleClick=false;
+    private Socket socket;
+    private String command;
+
     //缩放梯度
     private int zoomGradient = 0;
 
@@ -155,21 +167,21 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         mSwitchCamera.setImageResource(iconSrc);
         mFlashLamp = (ImageView) view.findViewById(R.id.image_flash);
         setFlashRes();
-        mFlashLamp.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                type_flash++;
-                if (type_flash > 0x023)
-                    type_flash = TYPE_FLASH_AUTO;
-                setFlashRes();
-            }
-        });
-        ivPhoto.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                photoClickListener.onClick();
-            }
-        });
+//        mFlashLamp.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                type_flash++;
+//                if (type_flash > 0x023)
+//                    type_flash = TYPE_FLASH_AUTO;
+//                setFlashRes();
+//            }
+//        });
+//        ivPhoto.setOnClickListener(new OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                photoClickListener.onClick();
+//            }
+//        });
         mCaptureLayout = (CaptureLayout) view.findViewById(R.id.capture_layout);
         mCaptureLayout.setDuration(duration);
         mCaptureLayout.setIconSrc(iconLeft, iconRight);
@@ -267,6 +279,78 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
                 }
             }
         });
+
+        //增加socket触摸反馈
+        this.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()){
+                    case MotionEvent.ACTION_DOWN:
+                        isUp=false;
+                        //先获取此时的触点坐标与view真实大小的相对值;
+                        String xScale = new DecimalFormat("0.00").format(event.getX()/v.getWidth());
+                        String yScale = new DecimalFormat("0.00").format(event.getY()/v.getHeight());
+                        event.getX();
+                        if(firstClickTime==0&secondClickTime==0){//第一次点击
+                            firstClickTime=System.currentTimeMillis();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(!isUp){//长按 - 对应windows右键
+                                        sendCommand(xScale + "/" + yScale + "/r");
+                                        firstClickTime=0;
+                                        secondClickTime=0;
+                                        isDoubleClick=false;
+                                    }else {
+                                        if(!isDoubleClick){//点击 - 对应windows左键单击
+                                            sendCommand(xScale + "/" + yScale + "/l");
+                                        }
+                                        isDoubleClick=false;
+                                        firstClickTime=0;
+                                        secondClickTime=0;
+                                    }
+                                }
+                            }, 500);
+                        }else {
+                            secondClickTime=System.currentTimeMillis();
+                            stillTime =secondClickTime-firstClickTime;
+                            if ( stillTime < 500) {//两次点击小于0.5秒，认定为双击 - 对应windows左键双击
+                                sendCommand(xScale + "/" + yScale + "/d");
+                                isDoubleClick=true;
+                                firstClickTime=0;
+                                secondClickTime=0;
+                            }
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        isUp=true;
+                        break;
+                }
+                return true;
+            }
+        });
+    }
+
+    private void sendCommand(String command){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if(socket == null){
+                    try {
+                        socket = new Socket("192.168.107.220",10001);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if(socket!=null&&command!=null&&!command.isEmpty()){
+                    try {
+                        socket.getOutputStream().write(command.getBytes());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 
     @Override
