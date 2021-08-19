@@ -9,7 +9,7 @@ public class Constants {
     public static final int penMediumSize = 10;//画笔中
     public static final int penMaxSize = 15;//画笔粗
 
-    public static final String mainIP = "172.31.99.117";
+    public static final String mainIP = "192.168.3.220";
     public static final String groupIP1 = "192.168.3.212";
     public static final String groupIP2 = "192.168.3.213";
     public static final String groupIP3 = "172.31.98.218";

@@ -44,7 +44,7 @@ public class CourseFragment extends BaseFragment {
     }
 
     private void initPlayer() {
-        String source1 = "rtmp://192.168.107.88:1935/live/sub";
+        String source1 = "rtmp://192.168.3.221/live/mix";
         livePlayer.setUp(source1, true, "");
         livePlayer.startPlayLogic();
     }

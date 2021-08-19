@@ -337,7 +337,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
             public void run() {
                 if(socket == null){
                     try {
-                        socket = new Socket("192.168.107.220",10001);
+                        socket = new Socket("192.168.3.210",10001);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
