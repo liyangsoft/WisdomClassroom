@@ -214,6 +214,8 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
         setClick();
         initPaint();
         initPlayer();
+        openCamera();
+
     }
 
     private void initPlayer() {
