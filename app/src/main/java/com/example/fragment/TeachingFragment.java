@@ -215,6 +215,7 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
         initPaint();
         initPlayer();
         openCamera();
+
     }
 
     private void initPlayer() {
@@ -248,6 +249,7 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
         super.onResume();
         if (null != jCameraView) {
             jCameraView.onResume();
+
         }
         videoPlayer.onVideoResume();
 
@@ -342,14 +344,8 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
 
                     //单选分组
                     if (!isChoice) {
-                        if (null != socketClientThread) {
-                            socketClientThread.exit();
-                            socketClientThread = null;
-                        }
-                        if (null != mdiaPlayThread) {
-                            mdiaPlayThread.exit();
-                            mdiaPlayThread = null;
-                        }
+                        stopSocket();
+
                         currentLookGrooup = position;
                         initSocket(groupEntity.getIp(), Constants.mainPort);
 
@@ -496,7 +492,13 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
                         GroupTwoService.sendTcpMessage(str);
                         GroupThreeService.sendTcpMessage(str);
                         break;
+
                 }
+            } else {
+                GroupOneService.sendTcpMessage(str);
+                GroupTwoService.sendTcpMessage(str);
+                GroupThreeService.sendTcpMessage(str);
+                GroupFourService.sendTcpMessage(str);
             }
 
 
@@ -682,6 +684,52 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
         });
     }
 
+    private void stopSocket() {
+        if (null != socketClientThread) {
+            socketClientThread.exit();
+            socketClientThread = null;
+        }
+        if (null != mdiaPlayThread) {
+            mdiaPlayThread.exit();
+            mdiaPlayThread = null;
+        }
+
+        if (null != socketClientThread1) {
+            socketClientThread1.exit();
+            socketClientThread1 = null;
+        }
+        if (null != mdiaPlayThread1) {
+            mdiaPlayThread1.exit();
+            mdiaPlayThread1 = null;
+        }
+
+        if (null != socketClientThread2) {
+            socketClientThread2.exit();
+            socketClientThread2 = null;
+        }
+        if (null != mdiaPlayThread2) {
+            mdiaPlayThread2.exit();
+            mdiaPlayThread2 = null;
+        }
+
+        if (null != socketClientThread3) {
+            socketClientThread3.exit();
+            socketClientThread3 = null;
+        }
+        if (null != mdiaPlayThread3) {
+            mdiaPlayThread3.exit();
+            mdiaPlayThread3 = null;
+        }
+
+        if (null != socketClientThread4) {
+            socketClientThread4.exit();
+            socketClientThread4 = null;
+        }
+        if (null != mdiaPlayThread4) {
+            mdiaPlayThread4.exit();
+            mdiaPlayThread4 = null;
+        }
+    }
 
     /**
      * 连接socket
@@ -697,6 +745,7 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
                     socketClientThread = new ClientThread(ip, port);
                     socketClientThread.connect();
                     socketClientThread.start();
+
                     if (null == mdiaPlayThread) {
                         mdiaPlayThread = new VideoPlayThread(mSurfaceHolder.getSurface(), socketClientThread.getDataPackList());
                     }
@@ -790,7 +839,6 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
 
                     mdiaPlayThread3.start();
                 } catch (Exception e) {
-
                     ToastUtils.showShort("连接失败" + e.getMessage());
                 }
 
