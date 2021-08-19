@@ -9,6 +9,7 @@ import android.os.IBinder
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import android.widget.Toast
+import com.example.base.Constants
 import com.example.widget.Config
 import com.example.wisdomclassroom.MainActivity
 import com.example.wisdomclassroom.MyApplication
@@ -147,7 +148,7 @@ class MediaReaderService : Service() {
         STARTED
     }
 
-    private inner class SendThread : SocketServerThread(9091) {
+    private inner class SendThread : SocketServerThread(Constants.mainPort) {
         override fun onError(t: Throwable) {
             myApplication.serverStatus = ServerStatus.UNSTART
             handler.post {
