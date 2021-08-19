@@ -186,6 +186,7 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
     private List<String> ipList = new ArrayList<>();
     private SurfaceView surfaceView4;
     private SurfaceView surfaceView3;
+    String[] perms = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
 
 
     @Override
@@ -247,10 +248,16 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
     @Override
     public void onResume() {
         super.onResume();
-        if (null != jCameraView) {
-            jCameraView.onResume();
+
+        if (EasyPermissions.hasPermissions(mContext, perms)) {
+            // Have permission, do the thing!
+            if (null != jCameraView) {
+                jCameraView.onResume();
+
+            }
 
         }
+
         videoPlayer.onVideoResume();
 
     }
@@ -258,9 +265,16 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
     @Override
     public void onPause() {
         super.onPause();
-        if (null != jCameraView) {
-            jCameraView.onPause();
+
+        if (EasyPermissions.hasPermissions(mContext, perms)) {
+            // Have permission, do the thing!
+            if (null != jCameraView) {
+                jCameraView.onPause();
+
+            }
+
         }
+
         videoPlayer.onVideoPause();
     }
 
@@ -268,36 +282,8 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
     public void onDestroy() {
         super.onDestroy();
         GSYVideoManager.releaseAllVideos();
-        if (null != socketClientThread) {
-            socketClientThread.exit();
-        }
-        if (null != mdiaPlayThread) {
-            mdiaPlayThread.exit();
-        }
-        if (null != socketClientThread1) {
-            socketClientThread1.exit();
-        }
-        if (null != mdiaPlayThread1) {
-            mdiaPlayThread1.exit();
-        }
-        if (null != socketClientThread2) {
-            socketClientThread2.exit();
-        }
-        if (null != mdiaPlayThread2) {
-            mdiaPlayThread2.exit();
-        }
-        if (null != socketClientThread3) {
-            socketClientThread3.exit();
-        }
-        if (null != mdiaPlayThread3) {
-            mdiaPlayThread3.exit();
-        }
-        if (null != socketClientThread4) {
-            socketClientThread4.exit();
-        }
-        if (null != mdiaPlayThread4) {
-            mdiaPlayThread4.exit();
-        }
+        stopSocket();
+
     }
 
     private void inidRecycler() {
@@ -949,6 +935,7 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
      * @param position
      */
     private void cutIcon(int position) {
+        stopSocket();
         llGroup.setBackgroundColor(position == 1 ? Color.parseColor("#0B70E0") : Color.parseColor("#484A6D"));
 //        rlBroadcast.setBackgroundColor(position == 2 ? Color.parseColor("#0B70E0") : Color.parseColor("#484A6D"));
         rlContrast.setBackgroundColor(position == 3 ? Color.parseColor("#0B70E0") : Color.parseColor("#484A6D"));
@@ -964,16 +951,18 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
         switch (position) {
             case 1:
                 mSurfaceView.setVisibility(View.VISIBLE);
-                break;
-            case 2:
+                jCameraView.setVisibility(View.GONE);
                 break;
             case 3:
+                videoPlayer.onVideoResume();
+                videoPlayer.setVisibility(View.GONE);
                 contrast.setVisibility(View.VISIBLE);
                 isContrast = true;
                 break;
             case 6:
                 videoPlayer.onVideoPause();
                 videoPlayer.setVisibility(View.GONE);
+                mSurfaceView.setVisibility(View.GONE);
                 jCameraView.setVisibility(View.VISIBLE);
                 break;
 

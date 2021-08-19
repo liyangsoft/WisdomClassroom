@@ -64,12 +64,12 @@ public class MyAudioRecord extends Thread {
         while (!mExit){
             num = mAudioRecord.read(buffer, 0, mFrameSize);
             if(mOnDataInput!= null)mOnDataInput.inputData(buffer,0,num);
-            Log.d(TAG, "buffer len " + ", num = " + num);
+//            Log.d(TAG, "buffer len " + ", num = " + num);
         }
-        Log.d(TAG, "exit loop");
+//        Log.d(TAG, "exit loop");
 
         distory();
-        Log.d(TAG, "clean up");
+//        Log.d(TAG, "clean up");
     }
 
 
