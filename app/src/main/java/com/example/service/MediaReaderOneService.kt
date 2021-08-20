@@ -34,7 +34,7 @@ class MediaReaderOneService : Service() {
 
     lateinit var socketServerThread: SocketServerThread
     lateinit var videoSender: VideoSender
-    lateinit var voiceSender: VoiceSender
+//    lateinit var voiceSender: VoiceSender
     lateinit var myApplication: MyApplication
     val handler = Handler()
 
@@ -56,10 +56,10 @@ class MediaReaderOneService : Service() {
                     1920,1080,
                     config.videoBitrate.toInt(), config.videoFrameRate.toInt()
             )
-            voiceSender = VoiceSender(socketServerThread,
+            /*voiceSender = VoiceSender(socketServerThread,
                     config.channelMode, config.encodeFormat, config.channelCount.toInt(),
                     config.voiceByteRate.toInt(), config.voiceSampleRate.toInt()
-            )
+            )*/
 
         } catch (throwable: Throwable) {
             throwable.printStackTrace()
@@ -69,7 +69,7 @@ class MediaReaderOneService : Service() {
 
     private fun stopServer() {
         videoSender.exit()
-        voiceSender.exit()
+//        voiceSender.exit()
         socketServerThread.exit()
         deleteNotification()
         serverStatus = STOP_SERVER
