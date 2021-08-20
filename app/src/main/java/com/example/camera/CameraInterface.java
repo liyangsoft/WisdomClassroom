@@ -399,7 +399,12 @@ public class CameraInterface implements Camera.PreviewCallback {
                     mParams.setPictureFormat(ImageFormat.JPEG);
                     mParams.setJpegQuality(100);
                 }*/
-                mParams.setPreviewFormat(ImageFormat.YUY2);
+                if (CameraParamUtil.getInstance().isSupportedPictureFormats(mParams.getSupportedPictureFormats(),
+                        ImageFormat.YUY2)) {
+                    mParams.setPreviewFormat(ImageFormat.YUY2);
+//                    mParams.setJpegQuality(100);
+                }
+//                mParams.setPreviewFormat(ImageFormat.YUY2);
                 mCamera.setParameters(mParams);
                 mParams = mCamera.getParameters();
                 mCamera.setPreviewDisplay(holder);  //SurfaceView

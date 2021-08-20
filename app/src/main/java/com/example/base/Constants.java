@@ -13,7 +13,7 @@ public class Constants {
     public static final String groupIP1 = "192.168.3.212";
     public static final String groupIP2 = "192.168.3.213";
     public static final String groupIP3 = "172.31.98.218";
-    public static final String groupIP4 = "172.31.99.64";
+    public static final String groupIP4 = "172.31.99.63";
     public static final int groupPort = 8888;
     public static final int mainPort = 9091;
 

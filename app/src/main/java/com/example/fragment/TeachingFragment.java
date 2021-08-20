@@ -8,16 +8,22 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.PixelFormat;
+import android.hardware.display.DisplayManager;
+import android.hardware.display.VirtualDisplay;
 import android.media.Image;
+import android.media.ImageReader;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
 import android.opengl.Visibility;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -34,6 +40,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blankj.utilcode.util.ConvertUtils;
+import com.blankj.utilcode.util.ImageUtils;
+import com.blankj.utilcode.util.ScreenUtils;
+import com.blankj.utilcode.util.SizeUtils;
 import com.blankj.utilcode.util.ToastUtils;
 
 import com.example.base.BaseFragment;
@@ -48,6 +57,7 @@ import com.example.service.GroupFourService;
 import com.example.service.GroupOneService;
 import com.example.service.GroupThreeService;
 import com.example.service.GroupTwoService;
+import com.example.service.MediaReaderService;
 import com.example.widget.ChildClickableLinearLayout;
 import com.example.widget.PopwindowUtils;
 import com.example.wisdomclassroom.R;
@@ -66,6 +76,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -186,7 +197,11 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
     private List<String> ipList = new ArrayList<>();
     private SurfaceView surfaceView4;
     private SurfaceView surfaceView3;
-
+    String[] perms = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+    private String TAG = "teachering";
+    private MediaProjectionManager mediaProjectionManager;
+    private int REQUEST_MEDIA_PROJECTION = 20;
+    private Bitmap currentBitmap;
 
     @Override
     protected void onFirstUserVisible() {
@@ -216,6 +231,11 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
         initPlayer();
         openCamera();
 
+    }
+
+    @Override
+    protected int getContentViewLayoutID() {
+        return R.layout.fragment_teaching;
     }
 
     private void initPlayer() {
@@ -251,6 +271,7 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
             jCameraView.onResume();
 
         }
+
         videoPlayer.onVideoResume();
 
     }
@@ -260,7 +281,9 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
         super.onPause();
         if (null != jCameraView) {
             jCameraView.onPause();
+
         }
+
         videoPlayer.onVideoPause();
     }
 
@@ -268,36 +291,8 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
     public void onDestroy() {
         super.onDestroy();
         GSYVideoManager.releaseAllVideos();
-        if (null != socketClientThread) {
-            socketClientThread.exit();
-        }
-        if (null != mdiaPlayThread) {
-            mdiaPlayThread.exit();
-        }
-        if (null != socketClientThread1) {
-            socketClientThread1.exit();
-        }
-        if (null != mdiaPlayThread1) {
-            mdiaPlayThread1.exit();
-        }
-        if (null != socketClientThread2) {
-            socketClientThread2.exit();
-        }
-        if (null != mdiaPlayThread2) {
-            mdiaPlayThread2.exit();
-        }
-        if (null != socketClientThread3) {
-            socketClientThread3.exit();
-        }
-        if (null != mdiaPlayThread3) {
-            mdiaPlayThread3.exit();
-        }
-        if (null != socketClientThread4) {
-            socketClientThread4.exit();
-        }
-        if (null != mdiaPlayThread4) {
-            mdiaPlayThread4.exit();
-        }
+        stopSocket();
+
     }
 
     private void inidRecycler() {
@@ -664,7 +659,9 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
             if (null != mDoodle) {
                 mDoodle.clear();
             }
-
+            if (null != currentBitmap) {
+                currentBitmap.recycle();
+            }
             allowClickExceptDrawing();
             cutPen(0);
             cutDrawing(0);
@@ -912,7 +909,7 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
      * 除画板工具外不可点击
      */
     private void noClickExceptDrawing() {
-        frameLayout.setVisibility(View.VISIBLE);
+
         rlExit.setVisibility(View.VISIBLE);
         llLeftUtil.setChildClickable(false);
         button.setEnabled(false);
@@ -949,6 +946,7 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
      * @param position
      */
     private void cutIcon(int position) {
+        stopSocket();
         llGroup.setBackgroundColor(position == 1 ? Color.parseColor("#0B70E0") : Color.parseColor("#484A6D"));
 //        rlBroadcast.setBackgroundColor(position == 2 ? Color.parseColor("#0B70E0") : Color.parseColor("#484A6D"));
         rlContrast.setBackgroundColor(position == 3 ? Color.parseColor("#0B70E0") : Color.parseColor("#484A6D"));
@@ -964,16 +962,18 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
         switch (position) {
             case 1:
                 mSurfaceView.setVisibility(View.VISIBLE);
-                break;
-            case 2:
+                jCameraView.setVisibility(View.GONE);
                 break;
             case 3:
+                videoPlayer.onVideoResume();
+                videoPlayer.setVisibility(View.GONE);
                 contrast.setVisibility(View.VISIBLE);
                 isContrast = true;
                 break;
             case 6:
                 videoPlayer.onVideoPause();
                 videoPlayer.setVisibility(View.GONE);
+                mSurfaceView.setVisibility(View.GONE);
                 jCameraView.setVisibility(View.VISIBLE);
                 break;
 
@@ -1029,30 +1029,110 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
     private void opendrawing(int type) {
 
         if (type == 1) {
-            ViewTreeObserver viewTreeObserver = rlVideo.getViewTreeObserver();
+            frameLayout.setVisibility(View.VISIBLE);
+            ViewTreeObserver viewTreeObserver = frameLayout.getViewTreeObserver();
             viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    rlVideo.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    frameLayout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     //获取绘制完之后的宽度
-                    Bitmap mBitmap = Bitmap.createBitmap(rlVideo.getMeasuredWidth(), rlVideo.getMeasuredHeight(), Bitmap.Config.ARGB_8888);//创建一个新空白位图
+                    Bitmap mBitmap = Bitmap.createBitmap(frameLayout.getMeasuredWidth(), frameLayout.getMeasuredHeight(), Bitmap.Config.ARGB_8888);//创建一个新空白位图
                     Canvas canvasBg = new Canvas(mBitmap);
                     canvasBg.drawColor(Color.WHITE);
+
                     drawing(mBitmap);
                 }
             });
         } else {
-            videoPlayer.taskShotPic(new GSYVideoShotListener() {
-                @Override
-                public void getBitmap(Bitmap bitmap) {
-                    drawing(bitmap);
-                }
-            });
+
+            startMediaProjection();
 
         }
 
-
     }
+
+
+    /**
+     * 开始截取
+     */
+    private void startMediaProjection() {
+        mediaProjectionManager = (MediaProjectionManager) mContext.getSystemService(
+                Context.MEDIA_PROJECTION_SERVICE);
+        startActivityForResult(mediaProjectionManager.createScreenCaptureIntent(),
+                REQUEST_MEDIA_PROJECTION);
+    }
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_MEDIA_PROJECTION) {
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                MediaProjection mediaProjection = mediaProjectionManager.getMediaProjection(resultCode, data);
+                if (mediaProjection == null) {
+                    return;
+                }
+
+                int width = ScreenUtils.getAppScreenWidth();
+                int height = ScreenUtils.getAppScreenHeight();
+                ImageReader mImageReader = ImageReader.newInstance(width, height, PixelFormat.RGBA_8888, 2);
+                VirtualDisplay virtualDisplay = mediaProjection.createVirtualDisplay("screen-mirror", width, height,
+                        ScreenUtils.getScreenDensityDpi(), DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR, mImageReader.getSurface(), null, null);
+
+                new Handler().postDelayed(new Runnable() {
+
+                    private Image image;
+
+                    @Override
+                    public void run() {
+                        try {
+                            image = mImageReader.acquireLatestImage();
+                            if (image != null) {
+                                final Image.Plane[] planes = image.getPlanes();
+                                final ByteBuffer buffer = planes[0].getBuffer();
+                                int width = image.getWidth();
+                                int height = image.getHeight();
+
+                                int pixelStride = planes[0].getPixelStride();
+                                int rowStride = planes[0].getRowStride();
+                                int rowPadding = rowStride - pixelStride * width;
+                                Bitmap bitmap = Bitmap.createBitmap(width + rowPadding / pixelStride, height, Bitmap.Config.ARGB_8888);
+                                bitmap.copyPixelsFromBuffer(buffer);
+                                bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), false);
+                                if (bitmap != null) {
+                                    Log.e(TAG, "屏幕截图成功!" + "-------" + SizeUtils.dp2px(85) + "-------" + bitmap.getWidth() + "----------" + bitmap.getHeight());
+                                    currentBitmap = Bitmap.createBitmap(bitmap, SizeUtils.dp2px(84), 0, bitmap.getWidth() - SizeUtils.dp2px(85), bitmap.getHeight() - SizeUtils.dp2px(85));
+
+                                    frameLayout.setVisibility(View.VISIBLE);
+                                    drawing(currentBitmap);
+
+                                }
+
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, "截图出现异常：" + e.toString());
+                        } finally {
+                            if (image != null) {
+                                image.close();
+                            }
+                            if (mImageReader != null) {
+                                mImageReader.close();
+                            }
+                            if (virtualDisplay != null) {
+                                virtualDisplay.release();
+                            }
+                            //出现BufferQueueProducer: [ImageReader] dequeueBuffer: BufferQueue has been abandoned
+                            mImageReader.setOnImageAvailableListener(null, null);
+                            mediaProjection.stop();
+                        }
+                    }
+                }, 100);
+
+            }
+        }
+    }
+
 
     /**
      * 设置画板
@@ -1120,11 +1200,6 @@ public class TeachingFragment extends BaseFragment implements EasyPermissions.Pe
         mDoodleParams.mSupportScaleItem = true;
     }
 
-
-    @Override
-    protected int getContentViewLayoutID() {
-        return R.layout.fragment_teaching;
-    }
 
     @Override
     protected void onEventComming(EventCenter eventCenter) {

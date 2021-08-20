@@ -20,6 +20,7 @@ import java.net.Socket;
 public class GroupOneService extends Service {
     public static Socket socket;
     private static PrintWriter pw;
+    private static InputStream inputStream;
 
     @Override
     public void onCreate() {
@@ -45,7 +46,7 @@ public class GroupOneService extends Service {
                         Log.i("tcp", "客户端连接成功");
                         pw = new PrintWriter(socket.getOutputStream());
 
-                        InputStream inputStream = socket.getInputStream();
+                        inputStream = socket.getInputStream();
 
                         byte[] buffer = new byte[1024];
                         int len = -1;
@@ -60,6 +61,12 @@ public class GroupOneService extends Service {
                     } catch (Exception EE) {
                         EE.printStackTrace();
                         Log.i("tcp", "客户端无法连接服务器");
+                        try {
+                            Thread.sleep(5000);
+
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         releaseSocket(address, port);
                     } finally {
 
@@ -70,14 +77,18 @@ public class GroupOneService extends Service {
     }
 
     private static void releaseSocket(final String address, final int port) {
-        if (null != socket) {
-            try {
+        try {
+            if (null != socket) {
                 socket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+                socket = null;
             }
-            socket = null;
+            if (null != inputStream) {
+                inputStream.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
         if (null != pw) {
             pw.close();
         }

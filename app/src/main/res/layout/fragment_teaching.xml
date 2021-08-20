@@ -344,11 +344,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/rl_bottom"
-        android:layout_toRightOf="@+id/ll_left"
-        android:background="#000">
+        android:layout_toRightOf="@+id/ll_left">
 
         <!--直播rtmp-->
         <com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
+
             android:id="@+id/player"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
