@@ -13,6 +13,7 @@ import com.example.base.BaseFragment;
 import com.example.eventbus.EventCenter;
 import com.example.wisdomclassroom.R;
 import com.shuyu.gsyvideoplayer.GSYVideoManager;
+import com.shuyu.gsyvideoplayer.listener.GSYSampleCallBack;
 import com.shuyu.gsyvideoplayer.model.VideoOptionModel;
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer;
 
@@ -47,10 +48,11 @@ public class CourseFragment extends BaseFragment {
     @Override
     protected void initViewsAndEvents() {
         livePlayer = find(R.id.livePlayer);
+        initPlayserOptions(livePlayer);
         initPlayer();
     }
 
-    private void initPlayer() {
+    private void initPlayserOptions(StandardGSYVideoPlayer livePlayer) {
         /**此中内容：优化加载速度，降低延迟*/
         List<VideoOptionModel> list = new ArrayList<>();
         list.add(new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "rtsp_transport", "tcp"));
@@ -91,36 +93,25 @@ public class CourseFragment extends BaseFragment {
         list.add(new VideoOptionModel(IjkMediaPlayer.OPT_CATEGORY_FORMAT, "fflags", "fastseek"));//设置seekTo能够快速seek到指定位置并播放
         GSYVideoManager.instance().setOptionModelList(list);
         /**配置项配置结束，下面设置播放器*/
-        String source1 = "rtmp://192.168.107.88:1935/live/sub";
-//        String source1 = "rtmp://192.168.3.221/live/mix";
-        livePlayer.setUp(source1, true, "");
-//        livePlayer.setUpLazy(source1, true, null, null, "这是title");
+
+    }
+
+    private void initPlayer() {
+
+//        String source1 = "rtmp://192.168.107.88:1935/live/sub";
+        livePlayer.setVisibility(View.VISIBLE);
         //增加title
         livePlayer.getTitleTextView().setVisibility(View.GONE);
         //设置返回键
         livePlayer.getBackButton().setVisibility(View.GONE);
-        //设置全屏按键功能
-//        livePlayer.getFullscreenButton().setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                livePlayer.startWindowFullscreen(context, false, true);
-//            }
-//        });
-        //防止错位设置
-//        livePlayer.setPlayTag(TAG);
-//        livePlayer.setPlayPosition(position);
-        //是否根据视频尺寸，自动选择竖屏全屏或者横屏全屏
-        livePlayer.setAutoFullWithSize(true);
-        //音频焦点冲突时是否释放
-//        livePlayer.setReleaseWhenLossAudio(false);
-        //全屏动画
-//        livePlayer.setShowFullAnimation(true);
         //小屏时不触摸滑动
         livePlayer.setIsTouchWiget(false);
         livePlayer.setOnClickListener(null);
-
+        String source1 = "rtmp://192.168.3.221/live/mix";
+        livePlayer.setUp(source1, true, "");
         livePlayer.startPlayLogic();
     }
+
 
     @Override
     protected int getContentViewLayoutID() {

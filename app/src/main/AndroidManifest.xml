@@ -47,8 +47,8 @@
         <service android:name="com.example.service.MediaReaderService" />
         <service android:name="com.example.service.MediaReaderOneService" />
         <service android:name="com.example.service.MediaReaderTwoService" />
-        <service android:name="com.example.service.MediaReaderThreeService" />
-        <service android:name="com.example.service.MediaReaderFourService" />
+<!--        <service android:name="com.example.service.MediaReaderThreeService" />-->
+<!--        <service android:name="com.example.service.MediaReaderFourService" />-->
 
 
         <service
@@ -58,8 +58,8 @@
 
         <service android:name="com.example.service.GroupOneService" />
         <service android:name="com.example.service.GroupTwoService" />
-        <service android:name="com.example.service.GroupThreeService" />
-        <service android:name="com.example.service.GroupFourService" />
+<!--        <service android:name="com.example.service.GroupThreeService" />-->
+<!--        <service android:name="com.example.service.GroupFourService" />-->
     </application>
 
 </manifest>
