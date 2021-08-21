@@ -60,8 +60,10 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     private int REQUEST_MEDIA_PROJECTION = 18;
     private MyApplication myApplication;
     private static final int RC_SCREEN_PERM = 124;
-
-
+    private Intent intent1;
+    private Intent intent2;
+    private Intent intent3;
+    private Intent intent4;
 
 
     @Override
@@ -182,19 +184,19 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         intent.putExtra("CMD", 1);
         startService(intent);
 */
-        Intent intent1 = new Intent(this, MediaReaderOneService.class);
+        intent1 = new Intent(this, MediaReaderOneService.class);
         intent1.putExtra("CMD", 1);
         startService(intent1);
 
-        Intent intent2 = new Intent(this, MediaReaderTwoService.class);
+        intent2 = new Intent(this, MediaReaderTwoService.class);
         intent2.putExtra("CMD", 1);
         startService(intent2);
 
-        Intent intent3 = new Intent(this, MediaReaderThreeService.class);
+        intent3 = new Intent(this, MediaReaderThreeService.class);
         intent3.putExtra("CMD", 1);
         startService(intent3);
 
-        Intent intent4 = new Intent(this, MediaReaderFourService.class);
+        intent4 = new Intent(this, MediaReaderFourService.class);
         intent4.putExtra("CMD", 1);
         startService(intent4);
     }
@@ -248,6 +250,18 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
             Log.i("MainActivity", "Dismissing presentation because the activity is no longer visible.");
             mPresentation.dismiss();
             mPresentation = null;
+        }
+        if (null!=intent1){
+            stopService(intent1);
+        }
+        if (null!=intent2){
+            stopService(intent2);
+        }
+        if (null!=intent3){
+            stopService(intent3);
+        }
+        if (null!=intent4){
+            stopService(intent4);
         }
     }
 
