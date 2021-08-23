@@ -26,9 +26,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="XXX大学XXX教学楼XXX教室"
+                android:text="北辰展厅二层"
                 android:textColor="#FFFFFFFF"
-                android:textSize="28sp" />
+                android:textSize="28sp"
+                android:id="@+id/classroomName"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -72,9 +73,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="XXXXX"
+                        android:text="演示课堂"
                         android:textColor="#FFFFFFFF"
-                        android:textSize="36sp" />
+                        android:textSize="36sp"
+                        android:id="@+id/className"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -106,9 +108,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="张三"
+                        android:text="李老师"
                         android:textColor="#FFFFFFFF"
-                        android:textSize="36sp" />
+                        android:textSize="36sp"
+                        android:id="@+id/teacherName"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -141,7 +144,8 @@
                         android:layout_height="wrap_content"
                         android:text="8:00～8:45"
                         android:textColor="#FFFFFFFF"
-                        android:textSize="36sp" />
+                        android:textSize="36sp"
+                        android:id="@+id/classTime"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -182,7 +186,8 @@
                         android:layout_height="wrap_content"
                         android:text="录制中…"
                         android:textColor="#FF00D5FF"
-                        android:textSize="36sp" />
+                        android:textSize="36sp"
+                        android:id="@+id/recordStatus"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -204,7 +209,8 @@
                     android:layout_height="wrap_content"
                     android:text="00:45:00"
                     android:textColor="#FF00D5FF"
-                    android:textSize="36sp" />
+                    android:textSize="36sp"
+                    android:id="@+id/countDown"/>
             </LinearLayout>
 
         </LinearLayout>

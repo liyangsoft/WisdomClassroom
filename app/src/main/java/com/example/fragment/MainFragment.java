@@ -40,6 +40,10 @@ public class MainFragment extends BaseFragment {
     private TextView tvSet;
     private RelativeLayout rlSet;
     private Button button;
+    private TextView classroomName;
+    private TextView className;
+    private TextView teacherName;
+    private TextView classTime;
 
     @Override
     protected void onFirstUserVisible() {
@@ -64,10 +68,8 @@ public class MainFragment extends BaseFragment {
     @Override
     protected void initViewsAndEvents() {
         initId();
-
         initFragment();
         initView();
-
         init();
     }
 
@@ -110,6 +112,11 @@ public class MainFragment extends BaseFragment {
         ivSet = getView().findViewById(R.id.iv_set);
         tvSet = getView().findViewById(R.id.tv_control);
         rlSet =getView(). findViewById(R.id.rl_set);
+
+        classroomName = getView().findViewById(R.id.classroomName);
+        className = getView().findViewById(R.id.className);
+        teacherName = getView().findViewById(R.id.teacherName);
+        classTime = getView().findViewById(R.id.classTime);
 
         cutIcon(0);
         rlCourse.setOnClickListener(new View.OnClickListener() {

@@ -50,7 +50,8 @@
                 android:layout_marginTop="34dp"
                 android:text="电影模式"
                 android:textColor="#2787C8"
-                android:textSize="34sp" />
+                android:textSize="34sp"
+                android:id="@+id/movieModel"/>
         </LinearLayout>
 
         <LinearLayout
@@ -73,7 +74,8 @@
                 android:layout_marginTop="34dp"
                 android:text="电影+资源模式"
                 android:textColor="#2787C8"
-                android:textSize="34sp" />
+                android:textSize="34sp"
+                android:id="@+id/resourceModel"/>
         </LinearLayout>
 
         <RelativeLayout
@@ -102,7 +104,8 @@
                 app:upImage="@drawable/start_icon"
                 android:layout_width="81dp"
                 android:layout_height="81dp"
-                android:src="@drawable/start_icon" />
+                android:src="@drawable/start_icon"
+                android:id="@+id/startRecord"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -110,7 +113,7 @@
                 android:layout_marginTop="34dp"
                 android:text="开始"
                 android:textColor="#2787C8"
-                android:textSize="34sp" />
+                android:textSize="34sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -126,7 +129,8 @@
                 app:upImage="@drawable/pause_icon"
                 android:layout_width="81dp"
                 android:layout_height="81dp"
-                android:src="@drawable/pause_icon" />
+                android:src="@drawable/pause_icon"
+                android:id="@+id/pauseRecord"/>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -134,7 +138,7 @@
                 android:layout_marginTop="34dp"
                 android:text="暂停"
                 android:textColor="#2787C8"
-                android:textSize="34sp" />
+                android:textSize="34sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -149,13 +153,14 @@
                 app:upImage="@drawable/stop_icon"
                 android:layout_width="81dp"
                 android:layout_height="81dp"
-                android:src="@drawable/stop_icon" />
+                android:src="@drawable/stop_icon"
+                android:id="@+id/stopRecord"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="34dp"
-                android:text="暂停"
+                android:text="停止"
                 android:textColor="#2787C8"
                 android:textSize="34sp" />
         </LinearLayout>
@@ -172,7 +177,8 @@
                 app:upImage="@drawable/overtime_icon"
                 android:layout_width="81dp"
                 android:layout_height="81dp"
-                android:src="@drawable/overtime_icon" />
+                android:src="@drawable/overtime_icon"
+                android:id="@+id/overTime"/>
 
             <TextView
                 android:layout_width="wrap_content"
